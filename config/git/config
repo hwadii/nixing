@@ -1,0 +1,86 @@
+[core]
+  editor = $EDITOR
+  excludesfile = ~/.config/git/ignore
+  pager = delta
+  attributesFile = ~/.config/git/attributes
+[user]
+  name = Wadii Hajji
+  email = hajji.wadii@yahoo.fr
+  signingkey = DE79453757EEE689
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
+[pull]
+  rebase = false
+[push]
+  autoSetupRemote = true
+[rebase]
+  autoSquash = true
+  autoStash = true
+  updateRefs = true
+[pager]
+  branch = false
+[interactive]
+  diffFilter = delta --color-only
+  singleKey = true
+[alias]
+  st = status
+  rank = shortlog -sn --no-merges
+  chop = !"git branch -vv --no-color | cut -c 3- | grep ': gone]' | awk '{ print $1 }' | xargs -n1 git branch -D"
+  as = rebase --autosquash --interactive
+  fixup = commit --amend --no-edit -v
+  me = !"git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset' --author=\"$(git config user.name)\""
+  wip = for-each-ref --sort='authordate:iso8601' --format=' %(color:green)%(authordate:relative)%09%(color:white)%(refname:short)' refs/heads
+  smartlog = log --graph --pretty=format:'commit: %C(bold red)%h%Creset %C(red)[%H]%Creset %C(bold magenta)%d %Creset%ndate: %C(bold yellow)%cd %Creset%C(yellow)%cr%Creset%nauthor: %C(bold blue)%an%Creset %C(blue)[%ae]%Creset%n%C(cyan)%s%n%Creset'
+  sl = smartlog
+  choose-rebase = !"git log -n 50 --pretty=format:'%h %s' --no-merges | fzf | awk '{ print $1 }' | xargs -o git rebase -i"
+  lc = log-compact
+[showbranch]
+  default = --topo-order
+[branch]
+  sort = -committerdate
+[absorb]
+  maxStack = 20
+[delta]
+  navigate = true
+  side-by-side = false
+  syntax-theme = ansi
+  hyperlinks = true
+  paging = always
+[merge]
+  tool = diffview
+  conflictstyle = zdiff3
+[mergetool]
+  prompt = false
+  keepBackup = false
+[mergetool "diffview"]
+  cmd = nvim -n -c "DiffviewOpen" "$MERGE"
+[init]
+  defaultBranch = main
+[safe]
+  directory = *
+[diff "ansible-vault"]
+  textconv = ansible-vault view --vault-password-file=~/.vaultpass
+[github]
+  user = hwadii
+[commit]
+  gpgsign = true
+  verbose = true
+[diff]
+  colorMoved = plain
+  algorithm = histogram
+  mnemonicPrefix = true
+  renames = true
+[jump]
+  grepCmd = rg --vimgrep
+[rerere]
+  enabled = true
+  autoupdate = true
+[column]
+  ui = auto
+[tag]
+  sort = version:refname
+[includeIf "gitdir:~/code/cardiologs/"]
+  path = ~/.config/git/work
+# vim: ft=gitconfig

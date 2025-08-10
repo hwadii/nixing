@@ -22,4 +22,9 @@
     defaultEditor = true;
     startWithUserSession = true;
   };
+
+  xdg.configFile."emacs" = {
+    source = ../../config/emacs;
+    recursive = true;
+  };
 }
