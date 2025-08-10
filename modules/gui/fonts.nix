@@ -13,8 +13,14 @@
     enable = true;
     defaultFonts = {
       emoji = [ "Noto Color Emoji" ];
-      monospace = [ "Berkeley Mono" "DejaVu Sans Mono" ];
-      sansSerif = [ "Adwaita Sans" "DejaVu Sans" ];
+      monospace = [
+        "Berkeley Mono"
+        "DejaVu Sans Mono"
+      ];
+      sansSerif = [
+        "Adwaita Sans"
+        "DejaVu Sans"
+      ];
     };
   };
 }
