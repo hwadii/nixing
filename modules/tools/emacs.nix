@@ -7,14 +7,12 @@
     extraPackages = epkgs: [
       epkgs.vterm
       epkgs.tree-sitter-langs
-      (epkgs.treesit-grammars.with-grammars
-      	(grammars: [
-          grammars.tree-sitter-nix
-          grammars.tree-sitter-nu
-          grammars.tree-sitter-bash
-          grammars.tree-sitter-css
-        ])
-      )
+      (epkgs.treesit-grammars.with-grammars (grammars: [
+        grammars.tree-sitter-nix
+        grammars.tree-sitter-nu
+        grammars.tree-sitter-bash
+        grammars.tree-sitter-css
+      ]))
     ];
   };
 

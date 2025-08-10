@@ -8,7 +8,19 @@
         height = 24;
         modules-left = [ "wlr/taskbar" ];
         modules-center = [ "clock" ];
-        modules-right = [ "custom/separator" "pulseaudio" "custom/separator" "idle_inhibitor" "custom/separator" "network" "custom/separator" "memory" "custom/separator" "battery" "tray"];
+        modules-right = [
+          "custom/separator"
+          "pulseaudio"
+          "custom/separator"
+          "idle_inhibitor"
+          "custom/separator"
+          "network"
+          "custom/separator"
+          "memory"
+          "custom/separator"
+          "battery"
+          "tray"
+        ];
         "wlr/taskbar" = {
           format = "{title}";
           on-click = "minimize-raise";

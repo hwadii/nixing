@@ -11,7 +11,7 @@
       actions = true;
       hidden = {
         format = "(and %h more)";
-        text-color="#777777";
+        text-color = "#777777";
       };
       "urgency=high" = {
         background-color = "#c00000";

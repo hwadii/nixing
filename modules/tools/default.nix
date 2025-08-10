@@ -1,3 +1,7 @@
 {
-  imports = [ ./emacs.nix ./shell.nix ];
+  imports = [
+    ./emacs.nix
+    ./shell.nix
+    ./terminal.nix
+  ];
 }

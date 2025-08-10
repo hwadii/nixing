@@ -12,7 +12,7 @@
       indicator-thickness = 20;
       inside-color = "ffffff00";
       ring-color = "1d99f388";
-      line-uses-ring  = true;
+      line-uses-ring = true;
       separator-color = "1d99f322";
       text-color = "ffffff";
       text-clear-color = "ffffff";

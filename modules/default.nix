@@ -17,23 +17,25 @@
 
   home.sessionVariables = {
     SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh";
-    XDG_CACHE_HOME  = "$HOME/.cache";
+    XDG_CACHE_HOME = "$HOME/.cache";
     XDG_CONFIG_HOME = "$HOME/.config";
-    XDG_DATA_HOME   = "$HOME/.local/share";
-    XDG_STATE_HOME  = "$HOME/.local/state";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_STATE_HOME = "$HOME/.local/state";
   };
 
   home.packages = with pkgs; [
     emacs-lsp-booster
-    firefox
     fd
-    foot
+    firefox
     git
     grim
     mise
+    nixfmt-rfc-style
+    nixfmt-tree
     numix-gtk-theme
     pavucontrol
     ripgrep
+    slurp
     spotify
     swaybg
     wmenu
@@ -47,5 +49,5 @@
   # You can update home Manager without changing this value. See
   # the home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion  =  "25.05";
+  home.stateVersion = "25.05";
 }
