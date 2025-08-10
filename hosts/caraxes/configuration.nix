@@ -69,18 +69,7 @@
     };
   };
 
-  services.emacs = {
-    enable = true;
-    package = with pkgs; (
-      (emacsPackagesFor emacs-pgtk).emacsWithPackages (
-        epkgs: [
-          epkgs.vterm
-          epkgs.tree-sitter-langs
-          (epkgs.treesit-grammars.with-grammars (grammars: [ grammars.tree-sitter-nix grammars.tree-sitter-nu ]))
-        ]
-      )
-    );
-  };
+  programs.labwc.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.wadii = {
@@ -88,7 +77,6 @@
     description = "Wadii Hajji";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
-    shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGdNFG58u5AIrMVNpUE3k7bSul6ZdF2zjhj2WNPOy/qR wadii@caraxes-linux"
     ];
@@ -97,31 +85,13 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
     neovim
     wget
-    firefox
-    foot
-    git
     curl
-    wmenu
-    emacs-lsp-booster
-    mise
-    spotify
-    pavucontrol
+    fish
   ];
-
-  environment.sessionVariables = {
-    SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh";
-    XDG_CACHE_HOME  = "$HOME/.cache";
-    XDG_CONFIG_HOME = "$HOME/.config";
-    XDG_DATA_HOME   = "$HOME/.local/share";
-    XDG_STATE_HOME  = "$HOME/.local/state";
-  };
-
-  environment.variables.EDITOR = "emacs";
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -130,12 +100,6 @@
     enable = true;
     enableSSHSupport = true;
   };
-
-  programs.labwc.enable = true;
-
-  programs.waybar.enable = true;
-
-  programs.fish.enable = true;
 
   programs.ssh.extraConfig = ''
     AddKeysToAgent yes
@@ -153,14 +117,15 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
-  security.rtkit.enable = true;
-
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+
+  security.rtkit.enable = true;
+  security.pam.services.swaylock = {};
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
