@@ -5,5 +5,6 @@
     ./waybar.nix
     ./gtk.nix
     ./labwc.nix
+    ./fonts.nix
   ];
 }

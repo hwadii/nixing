@@ -80,7 +80,7 @@
       "wheel"
     ];
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGdNFG58u5AIrMVNpUE3k7bSul6ZdF2zjhj2WNPOy/qR wadii@caraxes-linux"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGdNFG58u5AIrMVNpUE3k7bSul6ZdF2zjhj2WNPOy/qR wadii@caraxes"
     ];
   };
 
@@ -106,15 +106,6 @@
   programs.ssh.extraConfig = ''
     AddKeysToAgent yes
   '';
-
-  fonts.packages = with pkgs; [
-    adwaita-fonts
-    jetbrains-mono
-    noto-fonts-cjk-sans
-    noto-fonts-emoji
-  ];
-
-  # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
