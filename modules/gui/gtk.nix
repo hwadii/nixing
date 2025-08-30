@@ -11,17 +11,18 @@
       name = "Adwaita";
     };
     gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
+      color-scheme = "prefer-dark";
+      gtk-application-prefer-dark-theme = 1;
       gtk-cursor-theme-name = "Adwaita";
       gtk-cursor-theme-size = 24;
     };
     gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
+      gtk-application-prefer-dark-theme = 1;
       gtk-cursor-theme-name = "Adwaita";
       gtk-cursor-theme-size = 24;
     };
     gtk2.extraConfig = ''
-      gtk-application-prefer-dark-theme=true
+      gtk-application-prefer-dark-theme=1
       gtk-cursor-theme-name="Adwaita"
       gtk-cursor-theme-size=24
     '';
@@ -35,6 +36,7 @@
         icon-theme = "Adwaita";
         cursor-theme = "Adwaita";
         font-name = "sans 10";
+        color-scheme = "prefer-dark";
       };
     };
   };
