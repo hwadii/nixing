@@ -38,6 +38,7 @@
     slurp
     spotify
     swaybg
+    wl-clipboard
     wmenu
   ];
 

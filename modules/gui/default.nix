@@ -1,12 +1,13 @@
 {
   imports = [
-    ./swaylock.nix
-    ./mako.nix
-    ./waybar.nix
+    ./cliphist.nix
+    ./fonts.nix
     ./gtk.nix
     ./labwc.nix
-    ./fonts.nix
+    ./mako.nix
     ./niri.nix
+    ./swaylock.nix
+    ./waybar.nix
     ./wlsunset.nix
   ];
 }
