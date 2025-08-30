@@ -6,7 +6,7 @@
         layer = "top";
         position = "top";
         height = 24;
-        modules-left = [ "wlr/taskbar" ];
+        modules-left = [ "niri/workspaces" ];
         modules-center = [ "clock" ];
         modules-right = [
           "custom/separator"
@@ -21,14 +21,16 @@
           "battery"
           "tray"
         ];
-        "wlr/taskbar" = {
-          format = "{title}";
-          on-click = "minimize-raise";
-        };
         "custom/separator" = {
           format = " • ";
           interval = "once";
           tooltip = false;
+        };
+        clock = {
+          interval = 60;
+          tooltip = true;
+          format = "{:%H:%M %Y-%m-%d}";
+          tooltip-format = "<tt><small>{calendar}</small></tt>";
         };
       };
     };

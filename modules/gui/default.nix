@@ -6,5 +6,7 @@
     ./gtk.nix
     ./labwc.nix
     ./fonts.nix
+    ./niri.nix
+    ./wlsunset.nix
   ];
 }

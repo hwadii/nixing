@@ -2,7 +2,7 @@
 
 {
   wayland.windowManager.labwc = {
-    enable = true;
+    enable = false;
     autostart = [
       "${pkgs.swaybg}/bin/swaybg -i ${config.home.homeDirectory}/dev/nixing/img/focus_intensely.jpg >/dev/null 2>&1 &"
     ];

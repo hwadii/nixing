@@ -69,7 +69,7 @@
     };
   };
 
-  programs.labwc.enable = true;
+  programs.niri.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.wadii = {
