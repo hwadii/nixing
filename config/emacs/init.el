@@ -743,8 +743,11 @@
   :disabled
   :ensure t
   :hook (after-init . global-mise-mode))
+(use-package lobsters
+  :ensure t)
 (use-package envrc
   :ensure t
+  :init (envrc-global-mode)
   :bind (:map envrc-mode-map ("C-c e" . envrc-command-map)))
 (use-package no-littering
   :ensure t

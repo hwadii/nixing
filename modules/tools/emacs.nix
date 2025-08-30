@@ -12,6 +12,9 @@
         grammars.tree-sitter-nu
         grammars.tree-sitter-bash
         grammars.tree-sitter-css
+        grammars.tree-sitter-c
+        grammars.tree-sitter-cpp
+        grammars.tree-sitter-toml
       ]))
     ];
   };
