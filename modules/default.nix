@@ -40,6 +40,7 @@
     swaybg
     wl-clipboard
     wmenu
+    qbittorrent
   ];
 
   # This value determines the home Manager release that your
