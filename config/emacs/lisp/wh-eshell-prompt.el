@@ -53,7 +53,7 @@
 
 (defun wh-eshell-prompt-fn ()
   "Eshell prompt with colors from the current enabled theme."
-  (if (modus-themes--modus-p (car custom-enabled-themes)) (wh-eshell-modus-themes-prompt) (wh-eshell-ef-themes-prompt)))
+  (if (ef-themes--ef-p (car custom-enabled-themes)) (wh-eshell-ef-themes-prompt) (wh-eshell-modus-themes-prompt)))
 
 (provide 'wh-eshell-prompt)
 
