@@ -118,7 +118,11 @@
     enableSSHSupport = true;
   };
 
-  # List services that you want to enable:
+  programs.ssh.extraConfig = ''
+    AddKeysToAgent yes
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/moondancer
+  '';
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;

@@ -103,6 +103,8 @@
 
   programs.ssh.extraConfig = ''
     AddKeysToAgent yes
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/caraxes
   '';
 
   # Enable the OpenSSH daemon.
