@@ -3,8 +3,12 @@
 {
   home.packages = with pkgs; [
     adwaita-fonts
-    jetbrains-mono
+    aporetic-bin
     dejavu_fonts
+    iosevka-bin
+    jetbrains-mono
+    julia-mono
+    newcomputermodern
     noto-fonts-cjk-sans
     noto-fonts-emoji
   ];

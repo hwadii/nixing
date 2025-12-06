@@ -24,23 +24,27 @@
   };
 
   home.packages = with pkgs; [
+    cmake
+    delta
     emacs-lsp-booster
     fd
     firefox
     git
     grim
     mise
+    mpv
     nixfmt-rfc-style
     nixfmt-tree
     numix-gtk-theme
     pavucontrol
+    qbittorrent
     ripgrep
     slurp
     spotify
     swaybg
+    unzip
     wl-clipboard
     wmenu
-    qbittorrent
   ];
 
   # This value determines the home Manager release that your
