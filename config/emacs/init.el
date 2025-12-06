@@ -394,6 +394,8 @@
                '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
   (add-to-list 'treesit-language-source-alist
                '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
+(use-package typst-ts-mode
+  :ensure t)
 (use-package rainbow-delimiters
   :ensure t
   :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode lisp-mode) . rainbow-delimiters-mode))
@@ -702,8 +704,6 @@
                               ("M-r" . consult-history))))
 (use-package ligature
   :ensure t
-  :init
-  (global-ligature-mode)
   :config
   (ligature-set-ligatures 't '("=>" "->" "<-" "<->" "<=>" "==>" "<==>" "<==" "==" "!=" "===" "!==" ">=" "<=" "::" "?." "??"
                                "-->" "<--" "<!--")))
@@ -732,13 +732,7 @@
   (:map calendar-mode-map ("?" . casual-calendar-tmenu))
   (:map reb-mode-map ("C-c C-/" . casual-re-builder-tmenu)))
 (use-package ef-themes
-  :ensure t
-  :bind
-  ("<f6>" . ef-themes-toggle)
-  :custom
-  (ef-themes-variable-pitch-ui t)
-  (ef-themes-mixed-fonts t)
-  (ef-themes-to-toggle '(ef-reverie ef-dream)))
+  :ensure t)
 (use-package mise
   :disabled
   :ensure t
@@ -1008,12 +1002,14 @@
   :bind (:map wh-prefix-map ("g" . git-link-dispatch)))
 (use-package modus-themes
   :ensure t
+  :init
+  (modus-themes-include-derivatives-mode)
   :config
   :custom
   (modus-themes-mixed-fonts t)
   (modus-themes-variable-pitch-ui t)
   (modus-themes-italic-constructs t)
-  (modus-themes-bold-constructs nil)
+  (modus-themes-bold-constructs t)
   (modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted)))
 (use-package smtpmail
   :ensure nil

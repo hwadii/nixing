@@ -6,6 +6,8 @@
     package = pkgs.emacs-pgtk;
     extraPackages = epkgs: [
       epkgs.vterm
+      epkgs.jinx
+      epkgs.pdf-tools
       epkgs.tree-sitter-langs
       (epkgs.treesit-grammars.with-grammars (grammars: [
         grammars.tree-sitter-nix
@@ -15,6 +17,8 @@
         grammars.tree-sitter-c
         grammars.tree-sitter-cpp
         grammars.tree-sitter-toml
+        grammars.tree-sitter-typst
+        grammars.tree-sitter-scala
       ]))
     ];
   };
