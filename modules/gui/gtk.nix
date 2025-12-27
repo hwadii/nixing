@@ -35,7 +35,6 @@
         gtk-theme = "Adwaita";
         icon-theme = "Adwaita";
         cursor-theme = "Adwaita";
-        font-name = "sans 10";
         color-scheme = "prefer-dark";
       };
     };

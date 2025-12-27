@@ -19,6 +19,7 @@
         grammars.tree-sitter-toml
         grammars.tree-sitter-typst
         grammars.tree-sitter-scala
+        grammars.tree-sitter-rust
       ]))
     ];
   };

@@ -59,7 +59,7 @@
     variant = "compose:ralt";
   };
 
-  services.xserver.displayManager = {
+  services.displayManager = {
     gdm = {
       enable = true;
       wayland = true;
