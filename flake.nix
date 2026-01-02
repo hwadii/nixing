@@ -7,10 +7,14 @@
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    inputs@{ nixpkgs, home-manager, ... }:
+    inputs@{ nixpkgs, home-manager, disko, ... }:
     {
       nixosConfigurations.caraxes = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -37,6 +41,15 @@
             home-manager.useUserPackages = true;
             home-manager.users.wadii = import ./modules;
           }
+        ];
+      };
+
+      nixosConfigurations.balerion = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          disko.nixosModules.disko
+          ./hosts/balerion/configuration.nix
         ];
       };
     };
