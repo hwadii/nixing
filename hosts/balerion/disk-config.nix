@@ -46,7 +46,7 @@
               content = {
                 type = "filesystem";
                 format = "ext4";
-                mountpoint = "/a";
+                mountpoint = "/mnt/a";
               };
             };
           };

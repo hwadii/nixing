@@ -32,7 +32,6 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   # Use systemd for networking
-  services.resolved.enable = true;
   networking.useDHCP = false;
   systemd.network.enable = true;
   systemd.network.networks."10-e" = {

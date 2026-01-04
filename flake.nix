@@ -50,6 +50,7 @@
         modules = [
           disko.nixosModules.disko
           ./hosts/balerion/configuration.nix
+          ./modules/server
         ];
       };
     };
