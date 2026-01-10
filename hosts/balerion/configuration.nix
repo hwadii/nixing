@@ -80,6 +80,8 @@
     settings.AllowAgentForwarding = true;
   };
 
+  services.tailscale.enable = true;
+
   programs.ssh.startAgent = false;
 
   nix.settings.experimental-features = [
