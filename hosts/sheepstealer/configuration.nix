@@ -2,13 +2,17 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ modulesPath, config, pkgs, ... }:
 
 {
   imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./disk-config.nix
   ];
+
+  nix.settings.trusted-users = [ "wadii" "root" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -17,7 +21,7 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  networking.hostName = "moondancer"; # Define your hostname.
+  networking.hostName = "sheepstealer"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -48,21 +52,18 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
-  # Enable the GNOME Desktop Environment.
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "gb";
-    options = "ctrl:swapcaps compose:ralt";
+  # Enable Niri
+  services.displayManager = {
+    gdm = {
+      enable = true;
+      wayland = true;
+    };
   };
+
+  programs.niri.enable = true;
 
   # Configure console keymap
   console.keyMap = "us";
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -82,6 +83,7 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
+  security.pam.services.swaylock = { };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.wadii = {
@@ -94,6 +96,7 @@
     packages = with pkgs; [
       #  thunderbird
     ];
+    initialPassword = "changeme";
   };
 
   # Install firefox.
@@ -122,7 +125,7 @@
   programs.ssh.extraConfig = ''
     AddKeysToAgent yes
     IdentitiesOnly yes
-    IdentityFile ~/.ssh/moondancer
+    IdentityFile ~/.ssh/sheepstealer
   '';
 
   # Enable the OpenSSH daemon.
@@ -140,6 +143,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 
 }

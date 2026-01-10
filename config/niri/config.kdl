@@ -16,7 +16,7 @@ input {
 
             // For example:
             layout "us"
-            options "compose:ralt"
+            options "compose:ralt,ctrl:swapcaps"
         }
     }
 
