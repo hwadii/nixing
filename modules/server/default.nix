@@ -5,5 +5,6 @@
     ./calibre.nix
     ./syncthing.nix
     ./dns.nix
+    ./caddy.nix
   ];
 }

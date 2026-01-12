@@ -80,7 +80,10 @@
     settings.AllowAgentForwarding = true;
   };
 
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    permitCertUid = "caddy";
+  };
 
   programs.ssh.startAgent = false;
 
