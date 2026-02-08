@@ -4,14 +4,14 @@
 
 ;;; Code:
 
-(defun wh-eshell-modus-themes-prompt ()
-  "Eshell prompt with current modus-themes colors."
+(defun wh-eshell-prompt-fn ()
+  "Eshell prompt with colors from the current (modus-themes based) enabled theme."
   (modus-themes-with-colors
-    (let* ((cwd (wh-pwd-shorten-dirs (wh-pwd-replace-home (eshell/pwd)) 1))
-           (branch (magit-get-current-branch))
-           (stat (magit-file-status))
-           (suffix (if (= (file-user-uid) 0) "#" ">"))
-           (nix-shell? (getenv "IN_NIX_SHELL")))
+    (let ((cwd (wh-pwd-shorten-dirs (wh-pwd-replace-home (eshell/pwd)) 1))
+          (branch (magit-get-current-branch))
+          (stat (magit-file-status))
+          (suffix (if (= (file-user-uid) 0) "#" ">"))
+          (nix-shell? (getenv "IN_NIX_SHELL")))
       (format "%s%s%s%s "
               (if nix-shell?
                   (propertize "<nix> " 'face `(:foreground ,cyan))
@@ -26,10 +26,6 @@
               (if (eshell-exit-success-p)
                   (propertize suffix 'face `(:weight bold :foreground ,yellow))
                 (propertize suffix 'face `(:weight bold :foreground ,red-cooler)))))))
-
-(defun wh-eshell-prompt-fn ()
-  "Eshell prompt with colors from the current enabled theme."
-  (wh-eshell-modus-themes-prompt))
 
 (provide 'wh-eshell-prompt)
 
