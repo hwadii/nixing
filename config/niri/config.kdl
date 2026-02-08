@@ -260,7 +260,7 @@ spawn-at-startup "swaybg" "-i" "/home/wadii/dev/nixing/img/painting.jpg"
 // Additionally, clients will be informed that they are tiled, removing some client-side rounded corners.
 // This option will also fix border/focus ring drawing behind some semitransparent windows.
 // After enabling or disabling this, you need to restart the apps for this to take effect.
-// prefer-no-csd
+prefer-no-csd
 
 // You can change the path where screenshots are saved.
 // A ~ at the front will be expanded to the home directory.
@@ -346,6 +346,7 @@ binds {
     Mod+T { spawn "foot"; }
     Mod+D { spawn "wmenu-run"; }
     Super+Alt+L { spawn "swaylock"; }
+    Mod+O { toggle-overview; }
 
     // You can also use a shell. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument in the end.
