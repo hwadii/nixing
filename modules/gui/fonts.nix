@@ -11,6 +11,7 @@
     newcomputermodern
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
+    fantasque-sans-mono
   ];
 
   fonts.fontconfig = {
