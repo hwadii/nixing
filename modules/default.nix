@@ -31,6 +31,9 @@
     firefox
     git
     grim
+    hunspell
+    hunspellDicts.en_US
+    hunspellDicts.fr-any
     mise
     mpv
     nixfmt-rfc-style

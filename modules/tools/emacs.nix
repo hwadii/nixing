@@ -20,6 +20,9 @@
         grammars.tree-sitter-typst
         grammars.tree-sitter-scala
         grammars.tree-sitter-rust
+        grammars.tree-sitter-yaml
+        grammars.tree-sitter-go
+        grammars.tree-sitter-kdl
       ]))
     ];
   };

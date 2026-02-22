@@ -695,9 +695,7 @@
   :config
   (defalias 'eshell/v #'eat--eshell-exec-visual))
 (use-package ispell
-  :ensure nil
-  :custom
-  (ispell-program-name "/opt/homebrew/bin/hunspell"))
+  :ensure nil)
 (use-package flyspell
   :ensure nil
   :after ispell
@@ -1117,13 +1115,6 @@
   :pin gnu
   :init
   (editorconfig-mode 1))
-(use-package eglot-booster
-  :ensure t
-  :vc (:url "https://github.com/jdtsmith/eglot-booster" :rev :newest)
-  :after eglot
-  :custom
-  (eglot-booster-io-only t)
-  :config (eglot-booster-mode))
 (use-package lsp-mode
   :ensure t
   :diminish (lsp-mode . "LSP")
@@ -1157,6 +1148,9 @@
   :commands jq-interactively
   :bind (:map json-mode-map
               ("C-c C-j" . jq-interactively)))
+(use-package kdl-mode
+  :mode "\\.kdl\\'"
+  :ensure t)
 (use-package expand-region
   :ensure t
   :bind ("C-=" . er/expand-region))
@@ -1254,12 +1248,12 @@
   (fontaine-presets
    '((regular
       :default-family "Fantasque Sans Mono"
-      :default-height 190
+      :default-height 180
       :default-weight regular
       :fixed-pitch-family "Fantasque Sans Mono"
       :fixed-pitch-weight regular
       :variable-pitch-family "Miriam Libre"
-      :variable-pitch-height 170
+      :variable-pitch-height 160
       :variable-pitch-weight regular
       :bold-weight semibold
       :line-spacing 1)
