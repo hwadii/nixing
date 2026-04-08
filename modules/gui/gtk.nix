@@ -1,4 +1,8 @@
+{ pkgs, ... }:
+
 {
+  home.packages = [ pkgs.eog pkgs.nautilus ];
+
   gtk = {
     enable = true;
     font = {

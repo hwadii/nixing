@@ -48,6 +48,7 @@
     unzip
     wl-clipboard
     wmenu
+    zathura
   ];
 
   # This value determines the home Manager release that your
