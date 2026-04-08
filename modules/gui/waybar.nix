@@ -7,7 +7,7 @@
         position = "top";
         height = 24;
         modules-left = [ "niri/workspaces" ];
-        modules-center = [ "clock" ];
+        modules-center = [  ];
         modules-right = [
           "custom/separator"
           "pulseaudio"
@@ -20,6 +20,7 @@
           "custom/separator"
           "battery"
           "tray"
+          "clock"
         ];
         "custom/separator" = {
           format = " • ";
