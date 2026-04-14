@@ -70,6 +70,12 @@
 (setopt scroll-margin 5)
 (setopt scroll-preserve-screen-position t)
 
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+(setq redisplay-skip-fontification-on-input t)
+
 (tab-bar-mode 1)
 
 ;; Typed text replaces the selection if typed text replaces the
@@ -266,17 +272,18 @@
   :hook (after-init . repeat-mode))
 (use-package emacs
   :init
-  (defun crm-indicator (args)
-    (cons (format "[CRM%s] %s"
-                  (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                   crm-separator)
-                  (car args))
-          (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+  (when (< emacs-major-version 31)
+    (advice-add #'completing-read-multiple :filter-args
+                (lambda (args)
+                  (cons (format "[CRM%s] %s"
+                                (string-replace "[ \t]*" "" crm-separator)
+                                (car args))
+                        (cdr args)))))
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  (add-hook 'after-save-hook
+            'executable-make-buffer-file-executable-if-script-p)
   :bind
   ("M-z" . zap-up-to-char)
   ("M-Z" . zap-to-char)
@@ -300,6 +307,7 @@
   (custom-safe-themes t)
   (set-mark-command-repeat-pop t)
   (save-interprogram-paste-before-kill t)
+  (kill-do-not-save-duplicates t)
   (mouse-yank-at-point t)
   (compilation-max-output-line-length nil)
   (yank-excluded-properties t))
@@ -312,7 +320,7 @@
   :hook
   ((prog-mode text-mode) . whitespace-mode)
   :custom
-  (whitespace-style '(face trailing)))
+  (whitespace-style '(face trailing empty tabs)))
 (use-package simple
   :ensure nil
   :custom
@@ -353,13 +361,6 @@
 (use-package undo-fu-session
   :ensure t
   :config (undo-fu-session-global-mode))
-(use-package minibuffer
-  :ensure nil
-  :custom
-  (completion-cycle-threshold nil)
-  (completion-ignore-case t)
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
 (use-package vertico
   :ensure t
   :custom
@@ -371,6 +372,7 @@
 (use-package vertico-directory
   :ensure nil
   :after vertico
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
   :demand
   :bind (:map vertico-map
               ("RET"   . vertico-directory-enter)
@@ -389,6 +391,8 @@
   (advice-add #'tmm-add-prompt :after #'minibuffer-hide-completions))
 (use-package ffap
   :ensure nil
+  :custom
+  (ffap-machine-p-known 'reject)
   :config
   (advice-add #'ffap-menu-ask :around
               (lambda (&rest args)
@@ -493,10 +497,15 @@
   :ensure t
   :after org
   :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+(use-package re-builder
+  :ensure nil
+  :custom
+  (reb-re-syntax 'string))
 (use-package diff-hl
   :ensure t
   :hook ((magit-post-refresh . diff-hl-magit-post-refresh)
-         (magit-pre-refresh . diff-hl-magit-pre-refresh))
+         (magit-pre-refresh . diff-hl-magit-pre-refresh)
+         (dired-mode . diff-hl-dired-mode-unless-remote))
   :config (global-diff-hl-mode)
   :custom
   (diff-hl-flydiff-mode t)
@@ -635,8 +644,6 @@
 (use-package sudo-utils
   :ensure t
   :bind ("C-M-!" . sudo-utils-shell-command))
-(use-package ansi-color
-  :hook (compilation-filter . ansi-color-compilation-filter))
 (use-package eglot
   :ensure t
   :custom
@@ -811,6 +818,10 @@
     (orderless-style-dispatchers nil)
     (orderless-matching-styles '(orderless-literal)))
   :custom
+  (completion-ignore-case t)
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion))))
+  (completion-category-defaults nil)
   (orderless-matching-styles '(orderless-literal orderless-regexp)))
 (use-package casual
   :ensure t
@@ -834,6 +845,14 @@
 (use-package casual-avy
   :ensure t
   :after casual)
+(use-package compile
+  :ensure nil
+  :defer t
+  :custom
+  (compilation-always-kill t)
+  (compilation-ask-about-save nil)
+  (compilation-scroll-output 'first-error)
+  :hook (compilation-filter . ansi-color-compilation-filter))
 (use-package ef-themes
   :after modus-themes
   :ensure t)
@@ -1246,28 +1265,27 @@
   :config (fontaine-set-preset 'regular)
   :custom
   (fontaine-presets
-   '((regular
-      :default-family "Fantasque Sans Mono"
-      :default-height 180
+   '((narrow
+      :default-family "Monoid Nerd Font"
+      :default-height 170
       :default-weight regular
-      :fixed-pitch-family "Fantasque Sans Mono"
+      :fixed-pitch-family "Monoid Nerd Font"
       :fixed-pitch-weight regular
       :variable-pitch-family "Miriam Libre"
       :variable-pitch-height 160
       :variable-pitch-weight regular
       :bold-weight semibold
-      :line-spacing 1)
-     (legible
-      :default-family "Atkinson Hyperlegible Mono"
-      :default-height 190
+      :line-spacing 0.01)
+     (regular
+      :default-family "Berkeley Mono"
+      :default-height 160
       :default-weight regular
-      :fixed-pitch-family "Atkinson Hyperlegible Mono"
+      :fixed-pitch-family "Berkeley Mono"
       :fixed-pitch-weight regular
-      :variable-pitch-family "Atkinson Hyperlegible Next"
-      :variable-pitch-height 190
+      :variable-pitch-family "Miriam Libre"
+      :variable-pitch-height 160
       :variable-pitch-weight regular
-      :bold-weight semibold
-      :line-spacing 0.01))))
+      :bold-weight bold))))
 
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)

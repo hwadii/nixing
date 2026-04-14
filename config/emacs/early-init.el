@@ -10,7 +10,7 @@
 (setq display-time-default-load-average nil)
 (setq ring-bell-function 'ignore)
 (setq use-short-answers t)
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setq read-process-output-max (* 4 1024 1024)) ; 4MB
 (setq frame-inhibit-implied-resize t
       frame-resize-pixelwise t  ; fine resize
       package-native-compile t) ; native compile packages
