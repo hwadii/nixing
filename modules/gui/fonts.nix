@@ -19,7 +19,7 @@
     defaultFonts = {
       emoji = [ "Noto Color Emoji" ];
       monospace = [
-        "Berkeley Mono"
+        "Berkeley Mono Variable"
         "DejaVu Sans Mono"
       ];
       sansSerif = [
