@@ -1188,6 +1188,11 @@
   :ensure t)
 (use-package expreg
   :ensure t
+  :config
+  (defvar-keymap expreg-repeat-map
+    :repeat t
+    "=" #'expreg-expand
+    "-" #'expreg-contract)
   :bind (("C-=" . expreg-expand)
          ("C--" . expreg-contract)))
 (use-package surround
