@@ -1,9 +1,8 @@
-;; Interactively do things.
-(fido-vertical-mode 0)
-(ido-mode 0)
+;;; init.el --- Wadii's Emacs configuration -*- lexical-binding: t -*-
 
-;; Complete pairs
-(electric-pair-mode 0)
+;;; Commentary:
+
+;;; Code:
 
 (column-number-mode 1)
 (line-number-mode 1)
@@ -78,14 +77,20 @@
 
 (tab-bar-mode 1)
 
-;; Typed text replaces the selection if typed text replaces the
-;; selection if the selection is active
 (delete-selection-mode 1)
+
+(setopt echo-keystrokes 1e-6)
+
+(setopt extended-command-suggest-shorter nil)
+
+(setopt suggest-key-bindings 0)
+
+(setopt minibuffer-message-properties '(face minibuffer-prompt))
 
 (setopt user-full-name       "Wadii Hajji"
         user-real-login-name "Wadii Hajji"
         user-login-name      "hwadii"
-        user-mail-address    "hajji.wadii@yahoo.com")
+        user-mail-address    "hajji.wadii@yahoo.fr")
 
 (global-set-key [remap list-buffers] 'ibuffer)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
@@ -93,11 +98,16 @@
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-browse.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-insert.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-eshell-prompt.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-fonts.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "early-init.el"))
 
-(defvar-keymap wh-prefix-map
+(defvar-keymap wh-notes-map
+  :doc "Keymap for my notes commands."
+  :prefix #'wh-notes-prefix-map)
+(defvar-keymap wh-map
   :doc "Keymap for my commands."
-  :prefix 'wh-prefix-map)
+  :prefix #'wh-prefix-map
+  "r" wh-notes-map)
 
 ;; Enable installation of packages from MELPA.
 (require 'package)
@@ -272,13 +282,14 @@
   :hook (after-init . repeat-mode))
 (use-package emacs
   :init
-  (when (< emacs-major-version 31)
-    (advice-add #'completing-read-multiple :filter-args
-                (lambda (args)
-                  (cons (format "[CRM%s] %s"
-                                (string-replace "[ \t]*" "" crm-separator)
-                                (car args))
-                        (cdr args)))))
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
@@ -295,7 +306,7 @@
                (other-window -1)))
   ("M-g M-c" . switch-to-minibuffer)
   ("C-x C-#" . server-edit-abort)
-  :bind-keymap ("C-c w" . wh-prefix-map)
+  :bind-keymap ("C-c w" . wh-map)
   :custom
   (tab-always-indent t)
   (default-transient-input-method "latin-1-prefix")
@@ -313,6 +324,9 @@
   (yank-excluded-properties t))
 (use-package autorevert
   :ensure nil
+  :config
+  (setq auto-revert-interval 1)
+  (global-auto-revert-mode +1)
   :custom
   (global-auto-revert-non-file-buffers t))
 (use-package whitespace
@@ -342,6 +356,7 @@
 (use-package project
   :ensure nil
   :custom
+  (project-vc-extra-root-markers '(".project"))
   (project-switch-commands '((project-find-file "Find" ?f)
                              (project-find-dir "Directory" ?d)
                              (consult-ripgrep "Ripgrep" ?r)
@@ -361,6 +376,13 @@
 (use-package undo-fu-session
   :ensure t
   :config (undo-fu-session-global-mode))
+(use-package minibuffer
+  :ensure nil
+  :custom
+  (completion-cycle-threshold nil)
+  (completion-ignore-case t)
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 (use-package vertico
   :ensure t
   :custom
@@ -483,7 +505,7 @@
   :bind
   ("C-h ." . display-local-help)
   :custom
-  (org-hide-emphasis-markers t)
+  (org-hide-emphasis-markers nil)
   :hook
   (org-mode . auto-fill-mode))
 (use-package org-modern
@@ -556,9 +578,7 @@
   :ensure t
   :config
   :hook (ruby-ts-mode . (lambda ()
-                          (setq fill-column 140)
-                          (remove-hook 'flymake-diagnostic-functions #'ruby-flymake-auto t)
-                          (remove-hook 'flymake-diagnostic-functions #'t t)))
+                          (setq fill-column 140)))
   :custom
   (ruby-method-call-indent nil)
   (ruby-method-params-indent nil)
@@ -590,10 +610,10 @@
     "Find notes file from notes directory."
     (interactive)
     (find-file "~/code/notes/notes"))
-  :bind (:map wh-prefix-map
-              ("r r" . remember)
-              ("r o" . remember-notes)
-              ("r n" . wh-find-notes-file))
+  :bind (:map wh-notes-map
+              ("r" . remember)
+              ("o" . remember-notes)
+              ("n" . wh-find-notes-file))
   :custom
   (remember-notes-initial-major-mode 'org-mode)
   (remember-in-new-frame t)
@@ -637,6 +657,7 @@
   :ensure nil
   :pin gnu
   :custom
+  (which-key-echo-keystrokes echo-keystrokes)
   (which-key-show-early-on-C-h t)
   (which-key-idle-delay 10000.1)
   (which-key-idle-secondary-delay 0.05)
@@ -718,7 +739,7 @@
          ("C-M-$" . jinx-languages)))
 (use-package password-store-menu
   :ensure t
-  :bind (:map wh-prefix-map ("p" . password-store-menu))
+  :bind (:map wh-map ("p" . password-store-menu))
   :custom
   (password-store-menu-key nil))
 (use-package rg
@@ -818,10 +839,6 @@
     (orderless-style-dispatchers nil)
     (orderless-matching-styles '(orderless-literal)))
   :custom
-  (completion-ignore-case t)
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles partial-completion))))
-  (completion-category-defaults nil)
   (orderless-matching-styles '(orderless-literal orderless-regexp)))
 (use-package casual
   :ensure t
@@ -839,20 +856,12 @@
   (:map reb-mode-map ("C-c C-/" . casual-re-builder-tmenu))
   (:map eshell-mode-map ("C-c C-/" . casual-eshell-tmenu))
   (:map org-mode-map ("C-c C-/" . casual-org-tmenu))
-  (:map wh-prefix-map ("t" . casual-timezone-tmenu))
+  (:map wh-map ("t" . casual-timezone-tmenu))
   :custom
   (casual-lib-use-unicode nil))
 (use-package casual-avy
   :ensure t
   :after casual)
-(use-package compile
-  :ensure nil
-  :defer t
-  :custom
-  (compilation-always-kill t)
-  (compilation-ask-about-save nil)
-  (compilation-scroll-output 'first-error)
-  :hook (compilation-filter . ansi-color-compilation-filter))
 (use-package ef-themes
   :after modus-themes
   :ensure t)
@@ -897,6 +906,10 @@
          ("C-c C-c" . embark-collect)
          :map embark-general-map
          ("W" . dictionary-search)
+         :map embark-identifier-map
+         ("R" . eglot-rename)
+         :map embark-flymake-map
+         ("A" . eglot-code-actions)
          :map embark-become-file+buffer-map
          ("t f" . find-file-other-tab))
   :init
@@ -917,7 +930,9 @@
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none)))))
+                 (window-parameters (mode-line-format . none))))
+  (push 'embark--ignore-target (alist-get 'eglot-code-actions embark-target-injection-hooks))
+  (push 'embark--ignore-target (alist-get 'eglot-rename embark-target-injection-hooks)))
 (use-package dictionary
   :ensure nil
   :custom
@@ -960,6 +975,7 @@
    ("C-'" . avy-isearch)))
 (use-package ace-window
   :ensure t
+  :init (ace-window-posframe-mode)
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   :bind
@@ -1100,7 +1116,7 @@
   :ensure t)
 (use-package git-link
   :ensure t
-  :bind (:map wh-prefix-map ("g" . git-link-dispatch)))
+  :bind (:map wh-map ("g" . git-link-dispatch)))
 (use-package modus-themes
   :ensure t
   :init
@@ -1170,9 +1186,10 @@
 (use-package kdl-mode
   :mode "\\.kdl\\'"
   :ensure t)
-(use-package expand-region
+(use-package expreg
   :ensure t
-  :bind ("C-=" . er/expand-region))
+  :bind (("C-=" . expreg-expand)
+         ("C--" . expreg-contract)))
 (use-package surround
   :ensure t
   :bind-keymap ("M-+" . surround-keymap))
@@ -1242,7 +1259,12 @@
   :ensure t
   :pin gnu)
 (use-package gptel
-  :ensure t)
+  :ensure t
+  :config
+  (setopt gptel-model 'claude-haiku-4-5-20251001)
+  (setopt gptel-backend (gptel-make-anthropic "Claude" :key #'gptel-api-key :stream t))
+  (setopt gptel-gemini-backend (gptel-make-gemini "Gemini" :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com" nil) :stream t))
+  :bind ("C-c o" . gptel-menu))
 (use-package detached
   :ensure t
   :pin gnu
@@ -1257,46 +1279,27 @@
   :ensure t)
 (use-package typst-ts-mode
   :ensure t)
+(use-package d2-ts-mode
+  :mode "\\.d2\\'"
+  :ensure t
+  :custom
+  (d2-ts-mode-output-format "png"))
 (use-package ddgr
   :ensure t)
-(use-package fontaine
+(use-package tempel
   :ensure t
-  :init (fontaine-mode 1)
-  :config (fontaine-set-preset 'regular)
-  :custom
-  (fontaine-presets
-   '((narrow
-      :default-family "Monoid Nerd Font"
-      :default-height 170
-      :default-weight regular
-      :fixed-pitch-family "Monoid Nerd Font"
-      :fixed-pitch-weight regular
-      :variable-pitch-family "Miriam Libre"
-      :variable-pitch-height 160
-      :variable-pitch-weight regular
-      :bold-weight semibold
-      :line-spacing 0.01)
-     (regular
-      :default-family "Berkeley Mono"
-      :default-height 160
-      :default-weight regular
-      :fixed-pitch-family "Berkeley Mono"
-      :fixed-pitch-weight regular
-      :variable-pitch-family "Miriam Libre"
-      :variable-pitch-height 160
-      :variable-pitch-weight regular
-      :bold-weight bold))))
+  :bind ("M-*" . tempel-expand)
+  :config (global-tempel-abbrev-mode))
 
-(put 'narrow-to-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(put 'scroll-left 'disabled nil)
-(put 'set-goal-column 'disabled nil)
-(put 'list-timers 'disabled nil)
+(setopt disabled-command-function nil)
 
 (load custom-file t)
 (require 'wh-browse)
 (require 'wh-insert)
 (require 'wh-eshell-prompt)
 (require 'wh-eglot)
+(require 'wh-fonts)
+
+(provide 'init)
+
+;;; init.el ends here
