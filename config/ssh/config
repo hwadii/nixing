@@ -10,5 +10,4 @@ Host github
 
 Host balerion
   User wadii
-  HostName balerion.lan
   ForwardAgent yes
