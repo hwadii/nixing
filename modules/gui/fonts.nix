@@ -12,6 +12,7 @@
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
     fantasque-sans-mono
+    input-fonts
   ];
 
   fonts.fontconfig = {
