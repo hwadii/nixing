@@ -20,41 +20,16 @@
       :variable-pitch-height 160
       :variable-pitch-weight regular
       :bold-weight bold)
-     (narrow
-      :default-family "Iosevka SS05"
-      :default-height 160
-      :default-weight regular
-      :default-width expanded
-      :fixed-pitch-family "Iosevka SS05"
-      :fixed-pitch-weight regular
-      :fixed-pitch-width expanded
-      :variable-pitch-family "Input Sans Condensed"
-      :variable-pitch-height 160
-      :variable-pitch-weight regular
-      :bold-weight bold
-      :line-spacing 1)
-     (legible
-      :default-family "Geist Mono"
-      :default-height 160
-      :default-weight regular
-      :fixed-pitch-family "Geist Mono"
-      :fixed-pitch-weight regular
-      :variable-pitch-family "Geist"
-      :variable-pitch-height 160
-      :variable-pitch-weight regular
-      :bold-weight semibold
-      :line-spacing 0.001)
      (classic
-      :default-family "JetBrains Mono NL"
+      :default-family "Liberation Mono"
       :default-height 160
       :default-weight regular
-      :fixed-pitch-family "JetBrains Mono NL"
+      :fixed-pitch-family "Liberation Mono"
       :fixed-pitch-weight regular
       :variable-pitch-family "Input Sans Condensed"
       :variable-pitch-height 150
       :variable-pitch-weight regular
-      :bold-weight bold
-      :line-spacing 0.0001))))
+      :bold-weight bold))))
 
 (set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
 
