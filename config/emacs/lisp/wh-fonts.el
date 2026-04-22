@@ -7,7 +7,7 @@
 (use-package fontaine
   :ensure t
   :init (fontaine-mode 1)
-  :config (fontaine-set-preset 'regular)
+  :config (fontaine-set-preset 'classic)
   :custom
   (fontaine-presets
    '((regular
@@ -16,7 +16,7 @@
       :default-weight regular
       :fixed-pitch-family "Berkeley Mono Variable"
       :fixed-pitch-weight regular
-      :variable-pitch-family "Input Sans Condensed"
+      :variable-pitch-family "Atkinson Hyperlegible Next"
       :variable-pitch-height 160
       :variable-pitch-weight regular
       :bold-weight bold)
@@ -26,7 +26,7 @@
       :default-weight regular
       :fixed-pitch-family "Liberation Mono"
       :fixed-pitch-weight regular
-      :variable-pitch-family "Input Sans Condensed"
+      :variable-pitch-family "Atkinson Hyperlegible Next"
       :variable-pitch-height 150
       :variable-pitch-weight regular
       :bold-weight bold))))

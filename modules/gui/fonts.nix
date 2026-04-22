@@ -13,6 +13,7 @@
     noto-fonts-color-emoji
     fantasque-sans-mono
     input-fonts
+    atkinson-hyperlegible-next
   ];
 
   fonts.fontconfig = {

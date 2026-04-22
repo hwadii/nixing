@@ -871,6 +871,7 @@
   :hook (after-init . global-mise-mode))
 (use-package envrc
   :ensure t
+  :init (envrc-global-mode)
   :bind-keymap ("C-c e" . envrc-command-map))
 (use-package no-littering
   :ensure t
@@ -1121,7 +1122,8 @@
   :ensure t
   :init
   (modus-themes-include-derivatives-mode)
-  (modus-themes-load-theme 'ef-rosa)
+  :config
+  (modus-themes-load-theme 'modus-vivendi-tritanopia)
   :custom
   (modus-themes-mixed-fonts t)
   (modus-themes-variable-pitch-ui t)
