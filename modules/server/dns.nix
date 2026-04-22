@@ -30,4 +30,9 @@ in
       no-resolv = true;
     };
   };
+
+  systemd.services.dnsmasq = {
+    after = [ "tailscaled.service" "sys-subsystem-net-devices-tailscale0.device" ];
+    wants = [ "sys-subsystem-net-devices-tailscale0.device" ];
+  };
 }
