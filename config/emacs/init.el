@@ -8,7 +8,6 @@
 (line-number-mode 1)
 
 (blink-cursor-mode 1)
-(pixel-scroll-precision-mode 1)
 
 (global-visual-line-mode)
 (global-visual-wrap-prefix-mode)
@@ -64,10 +63,6 @@
 
 (setopt shell-file-name "fish")
 (setopt explicit-shell-file-name "bash")
-
-(setopt scroll-conservatively 10)
-(setopt scroll-margin 5)
-(setopt scroll-preserve-screen-position t)
 
 (setq-default bidi-display-reordering 'left-to-right
               bidi-paragraph-direction 'left-to-right)
@@ -1097,6 +1092,13 @@
   :custom
   (mouse-wheel-tilt-scroll t)
   (mouse-wheel-flip-direction t))
+(use-package ultra-scroll
+  :ensure t
+  :config
+  (ultra-scroll-mode 1)
+  :custom
+  (scroll-conservatively 3)
+  (scroll-margin 0))
 (use-package standard-themes
   :disabled
   :ensure t
