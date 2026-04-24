@@ -660,6 +660,8 @@
 (use-package sudo-utils
   :ensure t
   :bind ("C-M-!" . sudo-utils-shell-command))
+(use-package ansi-color
+  :hook (compilation-filter . ansi-color-compilation-filter))
 (use-package eglot
   :ensure t
   :custom
