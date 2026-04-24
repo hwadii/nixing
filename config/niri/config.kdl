@@ -257,7 +257,7 @@ layout {
     }
 }
 
-spawn-at-startup "swaybg" "-i" "/home/wadii/dev/nixing/img/painting.jpg"
+spawn-at-startup "swaybg" "-i" "/home/wadii/dev/nixing/img/berries.png"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
