@@ -23,6 +23,19 @@
     XDG_STATE_HOME = "$HOME/.local/state";
   };
 
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+    desktop = null;
+    documents = "${config.home.homeDirectory}/docs";
+    download = "${config.home.homeDirectory}/downloads";
+    pictures = "${config.home.homeDirectory}/pics";
+    music = "${config.home.homeDirectory}/music";
+    videos = "${config.home.homeDirectory}/videos";
+    templates = null;
+    publicShare = null;
+  };
+
   home.packages = with pkgs; [
     cmake
     delta
@@ -48,6 +61,8 @@
     unzip
     wl-clipboard
     wmenu
+    xdg-utils
+    xdg-user-dirs
     zathura
   ];
 
