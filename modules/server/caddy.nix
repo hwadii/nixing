@@ -28,6 +28,10 @@
       handle @sync {
         reverse_proxy 127.0.0.1:8384
       }
+      @torrent host torrent.h.exondation.com
+      handle @torrent {
+        reverse_proxy 127.0.0.1:8097
+      }
     '';
   };
 
