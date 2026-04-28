@@ -12,36 +12,48 @@
     settings = {
       bar = {
         density = "compact";
-        position = "right";
+        position = "top";
         showCapsule = true;
         widgets = {
           left = [
             {
-              id = "ControlCenter";
-              useDistroLogo = true;
+              id = "ActiveWindow";
+              showIcon = true;
+              maxWidth = 512;
+            }
+            {
+              id = "MediaMini";
             }
           ];
           center = [
             {
               id = "Workspace";
               labelMode = "none";
+              hideUnoccupied = false;
             }
           ];
           right = [
             {
-              id = "Network";
+              id = "Tray";
             }
             {
-              id = "Bluetooth";
+              id = "Battery";
             }
             {
-              formatHorizontal = "HH:mm";
-              formatVertical = "HH mm";
+              id = "Volume";
+            }
+            {
               id = "Clock";
-              usePrimaryColor = true;
+              formatHorizontal = "HH:mm ddd, MMM dd";
+            }
+            {
+              id = "ControlCenter";
             }
           ];
         };
+      };
+      dock = {
+        enabled = false;
       };
       appLauncher = {
         enableClipboardHistory = true;
@@ -51,7 +63,7 @@
         enabled = true;
         overviewEnabled = true;
       };
-      colorSchemes.predefinedScheme = "Monochrome";
+      # colorSchemes.predefinedScheme = "Monochrome";
       location = {
         monthBeforeDay = true;
         name = "Paris, France";
