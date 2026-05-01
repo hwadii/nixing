@@ -111,16 +111,11 @@
   :prefix #'wh-prefix-map
   "r" wh-notes-map)
 
-;; Enable installation of packages from MELPA.
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
-(eval-and-compile
-  (setopt use-package-expand-minimally t))
+
+(unless package-archive-contents
+  (package-refresh-contents))
 
 (use-package goto-addr
   :commands (goto-address-mode)
