@@ -5,7 +5,7 @@
   attributesFile = ~/.config/git/attributes
 [user]
   name = Wadii Hajji
-  email = hajji.wadii@yahoo.fr
+  email = wadii.hajji@pm.me
   signingkey = DE79453757EEE689
 [fetch]
   prune = true
