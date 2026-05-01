@@ -95,6 +95,13 @@
 
 (setopt uniquify-buffer-name-style 'forward)
 
+(setopt comint-prompt-read-only t)
+(setopt comint-buffer-maximum-size 4096)
+
+(setopt confirm-nonexistent-file-or-buffer nil)
+
+(setopt auto-save-no-message t)
+
 (global-set-key [remap list-buffers] 'ibuffer)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 
@@ -118,6 +125,16 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
+(use-package find-file
+  :ensure nil
+  :custom
+  (find-file-visit-truename t)
+  (vc-follow-symlinks t))
+(use-package imenu
+  :ensure nil
+  :custom
+  (imenu-auto-rescan t)
+  (imenu-max-item-length 160))
 (use-package goto-addr
   :commands (goto-address-mode)
   :hook (prog-mode . goto-address-prog-mode))
@@ -314,7 +331,7 @@ The DWIM behaviour of this command is as follows:
           (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
   (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
+        '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   (add-hook 'after-save-hook
             'executable-make-buffer-file-executable-if-script-p)
@@ -1012,7 +1029,6 @@ The DWIM behaviour of this command is as follows:
    ("C-'" . avy-isearch)))
 (use-package ace-window
   :ensure t
-  :init (ace-window-posframe-mode)
   :custom
   (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   :bind
