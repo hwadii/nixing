@@ -39,7 +39,6 @@
   home.packages = with pkgs; [
     cmake
     delta
-    emacs-lsp-booster
     fd
     firefox
     git
