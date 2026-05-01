@@ -6,7 +6,7 @@
 [user]
   name = Wadii Hajji
   email = wadii.hajji@pm.me
-  signingkey = DE79453757EEE689
+  signingkey = 01A2E2A2A8EE8448
 [fetch]
   prune = true
   pruneTags = true

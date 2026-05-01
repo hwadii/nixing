@@ -1,3 +1,4 @@
 [user]
   email = wadii.hajji@philips.com
+  signingKey = DE79453757EEE689
 # vim: ft=gitconfig
