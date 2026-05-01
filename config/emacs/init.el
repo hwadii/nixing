@@ -286,6 +286,29 @@
   :hook (after-init . repeat-mode))
 (use-package emacs
   :init
+  (defun wh-keyboard-quit-dwim ()
+    "Do-What-I-Mean behaviour for a general `keyboard-quit'.
+
+The generic `keyboard-quit' does not do the expected thing when
+the minibuffer is open.  Whereas we want it to close the
+minibuffer, even without explicitly focusing it.
+
+The DWIM behaviour of this command is as follows:
+
+- When the region is active, disable it.
+- When a minibuffer is open, but not focused, close the minibuffer.
+- When the Completions buffer is selected, close it.
+- In every other case use the regular `keyboard-quit'."
+    (interactive)
+    (cond
+     ((region-active-p)
+      (keyboard-quit))
+     ((derived-mode-p 'completion-list-mode)
+      (delete-completion-window))
+     ((> (minibuffer-depth) 0)
+      (abort-recursive-edit))
+     (t
+      (keyboard-quit))))
   (defun crm-indicator (args)
     (cons (format "[CRM%s] %s"
                   (replace-regexp-in-string
@@ -300,6 +323,7 @@
   (add-hook 'after-save-hook
             'executable-make-buffer-file-executable-if-script-p)
   :bind
+  ("C-g" . wh-keyboard-quit-dwim)
   ("M-z" . zap-up-to-char)
   ("M-Z" . zap-to-char)
   ("C-M-z" . delete-pair)
@@ -549,10 +573,16 @@
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (ediff-split-window-function 'split-window-horizontally))
-(use-package diff-mode
+(use-package diff
   :ensure nil
   :custom
+  (diff-font-lock-syntax nil)
   (diff-font-lock-prettify t))
+(use-package shr
+  :ensure nil
+  :custom
+  (shr-use-colors nil)
+  (shr-use-fonts nil))
 (use-package tree-sitter-langs ;; grammar bundle
   :ensure t
   :after tree-sitter
