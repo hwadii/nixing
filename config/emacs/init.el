@@ -6,8 +6,9 @@
 
 (column-number-mode 1)
 (line-number-mode 1)
-
-(blink-cursor-mode 1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode 1)
 
 (global-visual-line-mode)
 (global-visual-wrap-prefix-mode)
