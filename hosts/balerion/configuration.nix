@@ -55,6 +55,7 @@
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGdNFG58u5AIrMVNpUE3k7bSul6ZdF2zjhj2WNPOy/qR wadii@caraxes"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHexbfPWzgZ4/BVX92+TB39vF85hJnldH+cD+BG9FBo5 wadii@caraxes-win"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFcg/G70iXY1kStTEt+gjLgkUTAXc1AG8oVdGZBprX9O wadii@silverwing"
     ];
     hashedPassword = "$6$I4muGA8GIitwrD1N$fJiRKsHwifQoQ9W8L84kNW7xW1nfP1Lt0HbGrlQJGRsFdPI19kn0azlITxL6hOVU1nz/chMhEnpVFiHT4Ogwm.";
   };
