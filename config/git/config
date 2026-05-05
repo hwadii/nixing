@@ -5,7 +5,7 @@
   attributesFile = ~/.config/git/attributes
 [user]
   name = Wadii Hajji
-  email = wadii.hajji@pm.me
+  email = wadii.hajji@proton.me
   signingkey = 01A2E2A2A8EE8448
 [fetch]
   prune = true
@@ -65,7 +65,7 @@
 [github]
   user = hwadii
 [commit]
-  gpgsign = true
+  gpgsign = false
   verbose = true
 [diff]
   colorMoved = plain
@@ -82,5 +82,6 @@
 [tag]
   sort = version:refname
 [includeIf "gitdir:~/code/cardiologs/"]
-  path = ~/.config/git/work
-# vim: ft=gitconfig
+  path = ~/.config/git/philips
+[includeIf "gitdir:~/dev/tenderbolt/"]
+  path = ~/.config/git/tenderbolt
