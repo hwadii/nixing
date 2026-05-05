@@ -67,7 +67,7 @@
 
 (setopt nnrss-directory (expand-file-name "news/rss" user-emacs-directory))
 
-(setopt shell-file-name "fish")
+(setopt shell-file-name (if (eq system-type 'darwin) "/opt/homebrew/bin/fish" "fish"))
 (setopt explicit-shell-file-name "bash")
 
 (setq-default bidi-display-reordering 'left-to-right
@@ -118,9 +118,6 @@
   :doc "Keymap for my commands."
   :prefix #'wh-prefix-map
   "r" wh-notes-map)
-
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -204,6 +201,7 @@
   (dired-create-destination-dirs 'ask)
   (dired-kill-when-opening-new-dired-buffer t)
   (dired-auto-revert-buffer t)
+  (insert-directory-program (if (eq system-type 'darwin) "gls" "ls"))
   (delete-by-moving-to-trash nil))
 (use-package dired-x
   :ensure nil
@@ -834,11 +832,6 @@
   :bind
   (:map eshell-hist-mode-map (("M-s" . consult-history)
                               ("M-r" . consult-history))))
-(use-package ligature
-  :ensure t
-  :config
-  (ligature-set-ligatures 't '("=>" "->" "<-" "<->" "<=>" "==>" "<==>" "<==" "==" "!=" "===" "!==" ">=" "<=" "::" "?." "??"
-                               "-->" "<--" "<!--")))
 (use-package marginalia
   :ensure t
   :custom (marginalia-mode 1))
@@ -1194,7 +1187,9 @@
   ((csharp-mode csharp-ts-mode) . lsp))
 (use-package exec-path-from-shell
   :ensure t
+  :if (memq window-system '(mac ns x))
   :init
+  (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-envs '("PASSWORD_STORE_DIR" "BROWSER" "COMPOSE_BAKE" "XDG_CONFIG_HOME" "RIPGREP_CONFIG_PATH"
                                     "EDITOR" "VISUAL" "PRE_COMMIT_COLOR" "LSP_USE_PLISTS" "LESS" "LS_COLORS" "LANG" "LC_ALL"
                                     "LANGUAGE" "HOMEBREW_NO_EMOJI" "DOTNET_WATCH_SUPPRESS_EMOJIS" "SSH_AUTH_SOCK")))
