@@ -1319,6 +1319,7 @@
 (require 'wh-eshell-prompt)
 (require 'wh-eglot)
 (require 'wh-fonts)
+(require 'wh-tenderbolt)
 
 (provide 'init)
 
