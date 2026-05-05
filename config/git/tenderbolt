@@ -1,0 +1,5 @@
+# -*- mode: conf -*-
+
+[user]
+  email = wadii@tenderbolt.ai
+  signingKey = C8445CA55A44445E
