@@ -188,7 +188,7 @@
   (minions-mode)
   :custom
   (minions-mode-line-lighter "…")
-  (minions-prominent-modes '(flymake-mode lsp-mode vterm-copy-mode))
+  (minions-prominent-modes '(flymake-mode lsp-mode))
   (force-mode-line-update t))
 (use-package dired
   :ensure nil
@@ -299,29 +299,6 @@
   :hook (after-init . repeat-mode))
 (use-package emacs
   :init
-  (defun wh-keyboard-quit-dwim ()
-    "Do-What-I-Mean behaviour for a general `keyboard-quit'.
-
-The generic `keyboard-quit' does not do the expected thing when
-the minibuffer is open.  Whereas we want it to close the
-minibuffer, even without explicitly focusing it.
-
-The DWIM behaviour of this command is as follows:
-
-- When the region is active, disable it.
-- When a minibuffer is open, but not focused, close the minibuffer.
-- When the Completions buffer is selected, close it.
-- In every other case use the regular `keyboard-quit'."
-    (interactive)
-    (cond
-     ((region-active-p)
-      (keyboard-quit))
-     ((derived-mode-p 'completion-list-mode)
-      (delete-completion-window))
-     ((> (minibuffer-depth) 0)
-      (abort-recursive-edit))
-     (t
-      (keyboard-quit))))
   (defun crm-indicator (args)
     (cons (format "[CRM%s] %s"
                   (replace-regexp-in-string
@@ -336,7 +313,6 @@ The DWIM behaviour of this command is as follows:
   (add-hook 'after-save-hook
             'executable-make-buffer-file-executable-if-script-p)
   :bind
-  ("C-g" . wh-keyboard-quit-dwim)
   ("M-z" . zap-up-to-char)
   ("M-Z" . zap-to-char)
   ("C-M-z" . delete-pair)
@@ -404,6 +380,7 @@ The DWIM behaviour of this command is as follows:
                              (magit-project-status "Magit" ?m)
                              (project-eshell "Eshell" ?e)
                              (consult-project-buffer "Buffers" ?b)
+                             (ghostel-project "Term" ?t)
                              (project-any-command "Other" ?o))))
 (use-package savehist
   :ensure nil
@@ -692,14 +669,10 @@ The DWIM behaviour of this command is as follows:
 (use-package cape
   :ensure t
   :bind ("C-c p" . cape-prefix-map))
-(use-package vterm
+(use-package ghostel
   :ensure t
-  :bind (("C-c t" . vterm)
-         :map vterm-mode-map
-         ("C-q" . vterm-send-next-key))
-  :custom
-  (vterm-tramp-shells '(("docker" "/bin/sh") ("ssh" "/usr/bin/fish")))
-  (vterm-shell "/opt/homebrew/bin/fish"))
+  :hook
+  (eshell-mode . ghostel-eshell-visual-command-mode))
 (use-package which-key
   :ensure nil
   :pin gnu
@@ -760,21 +733,6 @@ The DWIM behaviour of this command is as follows:
 	          ("M-p" . flymake-goto-prev-error)))
 (use-package fish-mode
   :ensure t)
-(use-package eat
-  :ensure t
-  :bind
-  (:map eat-mode-map
-        ("s-v" . eat-yank)
-        ("M-o" . ace-window)
-   :map eat-semi-char-mode-map
-   ("M-o" . ace-window))
-  :hook
-  (eshell-mode . eat-eshell-mode)
-  (eshell-mode . eat-eshell-visual-command-mode)
-  :custom
-  (eat-term-scrollback-size 262144)
-  :config
-  (defalias 'eshell/v #'eat--eshell-exec-visual))
 (use-package ispell
   :ensure nil)
 (use-package flyspell
@@ -812,6 +770,7 @@ The DWIM behaviour of this command is as follows:
   (eshell-mode . abbrev-mode)
   (eshell-mode . goto-address-mode)
   :config
+  (defalias 'eshell/v 'eshell/ghostel)
   (defun adviced:eshell/cat (orig-fun &rest args)
     "Like `eshell/cat' but with image support."
     (if (seq-every-p (lambda (arg)

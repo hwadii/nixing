@@ -17,7 +17,12 @@
   };
 
   outputs =
-    inputs@{ nixpkgs, home-manager, disko, ... }:
+    inputs@{
+      nixpkgs,
+      home-manager,
+      disko,
+      ...
+    }:
     {
       nixosConfigurations.caraxes = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
