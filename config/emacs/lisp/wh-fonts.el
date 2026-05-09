@@ -7,7 +7,7 @@
 (use-package fontaine
   :ensure t
   :init (fontaine-mode 1)
-  :config (fontaine-set-preset 'classic)
+  :config (fontaine-set-preset 'regular)
   :custom
   (fontaine-presets
    '((regular
