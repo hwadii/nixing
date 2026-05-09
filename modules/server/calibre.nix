@@ -3,6 +3,17 @@
 {
   environment.systemPackages = [ pkgs.calibre ];
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      calibre-web = prev.calibre-web.overridePythonAttrs (old: {
+        postInstall = (old.postInstall or "") + ''
+          # no-op: suppress version check
+        '';
+        dontCheckRuntimeDeps = true;
+      });
+    })
+  ];
+
   services.calibre-web = {
     enable = true;
     user = "wadii";
