@@ -1213,8 +1213,6 @@
 (use-package surround
   :ensure t
   :bind-keymap ("M-+" . surround-keymap))
-(use-package terraform-mode
-  :ensure t)
 (use-package csv-mode
   :ensure t)
 (use-package just-ts-mode
@@ -1278,23 +1276,6 @@
 (use-package posframe
   :ensure t
   :pin gnu)
-(use-package gptel
-  :ensure t
-  :config
-  (setopt gptel-model 'claude-haiku-4-5-20251001)
-  (setopt gptel-backend (gptel-make-anthropic "Claude" :key #'gptel-api-key :stream t))
-  (setopt gptel-gemini-backend (gptel-make-gemini "Gemini" :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com" nil) :stream t))
-  :bind ("C-c o" . gptel-menu))
-(use-package detached
-  :ensure t
-  :pin gnu
-  :bind-keymap
-  ("C-c d" . detached-session-map)
-  :custom
-  (detached-show-output-command t)
-  (detached-terminal-data-command system-type)
-  (detached-notification-function #'detached-state-transitionion-echo-message)
-  (detached-shell-program "/bin/bash"))
 (use-package htmlize
   :ensure t)
 (use-package typst-ts-mode
