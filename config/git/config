@@ -65,7 +65,7 @@
 [github]
   user = hwadii
 [commit]
-  gpgsign = false
+  gpgsign = true
   verbose = true
 [diff]
   colorMoved = plain
