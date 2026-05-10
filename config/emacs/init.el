@@ -109,6 +109,7 @@
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-insert.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-eshell-prompt.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-fonts.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-tenderbolt.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "early-init.el"))
 
 (defvar-keymap wh-notes-map
@@ -1291,6 +1292,15 @@
   :ensure t
   :bind ("M-*" . tempel-expand)
   :config (global-tempel-abbrev-mode))
+(use-package sql
+  :ensure nil
+  :custom
+  (sql-postgres-login-params '(user password server database port)))
+(use-package js
+  :ensure nil
+  :mode
+  ("\\.mjs$" . js-ts-mode)
+  ("\\.mts$" . typescript-ts-mode))
 
 (setopt disabled-command-function nil)
 
