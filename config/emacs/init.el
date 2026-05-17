@@ -878,7 +878,7 @@
 (use-package envrc
   :ensure t
   :init (envrc-global-mode)
-  :bind-keymap ("C-c e" . envrc-command-map))
+  :bind ("C-c e" . envrc-command-map))
 (use-package no-littering
   :ensure t
   :config
@@ -1084,7 +1084,7 @@
   ;; Both < and C-+ work reasonably well.
   :custom
   (consult-narrow-key "<") ;; "C-+"
-  (consult-man-args "gman -k")
+  (consult-man-args (if (eq system-type 'darwin) "gman -k" "man -k"))
   (consult-preview-key 'any)
 
   ;; Optionally make narrowing help available in the minibuffer.
