@@ -4,16 +4,18 @@
   home.packages = with pkgs; [
     adwaita-fonts
     aporetic-bin
+    atkinson-hyperlegible-next
     dejavu_fonts
+    fantasque-sans-mono
+    input-fonts
     iosevka-bin
     jetbrains-mono
     julia-mono
+    lexend
     newcomputermodern
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
-    fantasque-sans-mono
-    input-fonts
-    atkinson-hyperlegible-next
+    source-code-pro
   ];
 
   fonts.fontconfig = {

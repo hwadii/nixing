@@ -21,12 +21,12 @@
       :variable-pitch-weight regular
       :bold-weight bold)
      (classic
-      :default-family "Liberation Mono"
+      :default-family "Source Code Pro"
       :default-height 160
-      :default-weight regular
-      :fixed-pitch-family "Liberation Mono"
-      :fixed-pitch-weight regular
-      :variable-pitch-family "Atkinson Hyperlegible Next"
+      :default-weight medium
+      :fixed-pitch-family "Source Code Pro"
+      :fixed-pitch-weight medium
+      :variable-pitch-family "Lexend"
       :variable-pitch-height 150
       :variable-pitch-weight regular
       :bold-weight bold))))
