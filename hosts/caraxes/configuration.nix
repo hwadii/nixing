@@ -100,6 +100,7 @@
     wget
     curl
     fish
+    man-pages
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -139,6 +140,12 @@
   ];
 
   virtualisation.docker.enable = true;
+
+  documentation = {
+    dev.enable = true;
+    man.generateCaches = true;
+    nixos.includeAllModules = true;
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
