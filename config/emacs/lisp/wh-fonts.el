@@ -16,8 +16,8 @@
       :default-weight regular
       :fixed-pitch-family "Berkeley Mono Variable"
       :fixed-pitch-weight regular
-      :variable-pitch-family "Atkinson Hyperlegible Next"
-      :variable-pitch-height 160
+      :variable-pitch-family "Lexend"
+      :variable-pitch-height 150
       :variable-pitch-weight regular
       :bold-weight bold)
      (classic

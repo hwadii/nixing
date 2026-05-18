@@ -1,4 +1,4 @@
-;;; init.el --- Wadii's Emacs configuration -*- lexical-binding: t -*-
+;;; init.el --- Wadii's Emacs configuration -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -17,8 +17,6 @@
 (setopt indicate-empty-lines t)
 (setopt indicate-buffer-boundaries 'left)
 (setopt require-final-newline t)
-
-(setopt load-prefer-newer t)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
@@ -87,9 +85,7 @@
 (setopt suggest-key-bindings 0)
 
 (setopt user-full-name       "Wadii Hajji"
-        user-real-login-name "Wadii Hajji"
-        user-login-name      "hwadii"
-        user-mail-address    "hajji.wadii@yahoo.fr")
+        user-mail-address    "wadii.hajji@proton.me")
 
 (setopt truncate-string-ellipsis "…")
 
@@ -101,6 +97,8 @@
 (setopt confirm-nonexistent-file-or-buffer nil)
 
 (setopt auto-save-no-message t)
+
+(setopt mode-line-right-align-edge 'right-margin)
 
 (global-set-key [remap list-buffers] 'ibuffer)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
@@ -120,6 +118,7 @@
   :prefix #'wh-prefix-map
   "r" wh-notes-map)
 
+(require 'package)
 (unless package-archive-contents
   (package-refresh-contents))
 
@@ -161,17 +160,13 @@
   (tramp-verbose 2)))
 (use-package isearch
   :ensure nil
-  :bind
-  ("C-s" . isearch-forward-regexp)
-  ("C-r" . isearch-backward-regexp)
-  ("C-M-s" . isearch-forward)
-  ("C-M-r" . isearch-backward)
   :custom
   (isearch-allow-motion t)
   (isearch-allow-scroll 'unlimited)
   (isearch-repeat-on-direction-change t)
   (isearch-wrap-pause 'no)
-  (isearch-lazy-count t))
+  (isearch-lazy-count t)
+  (search-default-mode #'char-fold-to-regexp))
 (use-package ibuffer
   :ensure nil
   :bind ([remap list-buffers] . ibuffer))
@@ -227,6 +222,8 @@
   (dired-vc-rename-file t))
 (use-package nerd-icons
   :ensure t
+  :config
+  (add-to-list 'nerd-icons-mode-icon-alist '(ghostel-mode nerd-icons-mdicon "nf-md-ghost" :face nerd-icons-purple))
   :custom
   (nerd-icons-font-family "Symbols Nerd Font Mono"))
 (use-package nerd-icons-dired
@@ -296,16 +293,19 @@
 (use-package repeat
   :ensure nil
   :hook (after-init . repeat-mode))
+(use-package mb-depth
+  :ensure nil
+  :init (minibuffer-depth-indicate-mode 1))
 (use-package emacs
   :init
-  (defun crm-indicator (args)
-    (cons (format "[CRM%s] %s"
-                  (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                   crm-separator)
-                  (car args))
-          (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+  (when (< emacs-major-version 31)
+    (advice-add
+     #'completing-read-multiple :filter-args
+     (lambda (args)
+       (cons (format "[CRM%s] %s"
+                     (string-replace "[ \t]*" "" crm-separator)
+                     (car args))
+             (cdr args)))))
   (setq minibuffer-prompt-properties
         '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
@@ -316,6 +316,10 @@
   ("M-Z" . zap-to-char)
   ("C-M-z" . delete-pair)
   ("C-M-j" . duplicate-dwim)
+  ("M-u" . upcase-dwim)
+  ("M-l" . downcase-dwim)
+  ("M-c" . capitalize-dwim)
+  ("M-=" . count-words)
   ("C-x O" . (lambda ()
                (interactive)
                (setq repeat-map 'other-window-repeat-map)
@@ -529,13 +533,14 @@
   :ensure t
   :custom
   (org-modern-checkbox '((88 . "☑") (45 . #("□–" 0 2 (composition ((2))))) (32 . "□")))
+  (org-modern-star 'fold)
   :hook
   (org-mode . org-modern-mode)
   (org-agenda-finalize-hook . org-modern-agenda))
 (use-package verb
   :ensure t
   :after org
-  :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+  :config (keymap-set org-mode-map "C-c C-r" verb-command-map))
 (use-package re-builder
   :ensure nil
   :custom
@@ -670,8 +675,9 @@
   :bind ("C-c p" . cape-prefix-map))
 (use-package ghostel
   :ensure t
-  :hook
-  (eshell-mode . ghostel-eshell-visual-command-mode))
+  :hook (eshell-load . ghostel-eshell-visual-command-mode)
+  :custom
+  (ghostel-shell shell-file-name))
 (use-package which-key
   :ensure nil
   :pin gnu
@@ -699,6 +705,7 @@
   (eglot-send-changes-idle-time 0.5)
   (eglot-events-buffer-config :size 0)
   (eglot-code-action-indications '(eldoc-hint))
+  (eglot-ignored-server-capabilities '(:semanticTokensProvider))
   (eglot-workspace-configuration
    '((:javascript
       (:preferences
@@ -720,6 +727,7 @@
   (add-to-list 'eglot-server-programs '(scala-ts-mode . ("metals")) t)
   (add-to-list 'eglot-server-programs '(zig-ts-mode . ("zls")) t)
   (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")) t)
+  (add-to-list 'eglot-server-programs '((tsx-mode tsx-ts-mode) . ("tailwindcss-language-server" "--stdio")) t)
   :hook
   (eglot-managed-mode . (lambda () (eglot-inlay-hints-mode -1))))
 (use-package flymake
@@ -988,6 +996,7 @@
   ("M-o" . ace-window))
 (use-package calendar
   :ensure nil
+  :bind ("C-c c" . calendar)
   :custom
   (calendar-week-start-day 1)
   (calendar-latitude [48 51 24 north])
@@ -1167,6 +1176,8 @@
 (use-package lsp-mode
   :ensure t
   :diminish (lsp-mode . "LSP")
+  :init
+  (setq lsp--show-message nil)
   :custom
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-modeline-code-actions-enable nil)
@@ -1286,6 +1297,11 @@
   :ensure t
   :custom
   (d2-ts-mode-output-format "png"))
+(use-package typescript-ts-mode
+  :ensure nil
+  :mode
+  ("\\.tsx$" . tsx-ts-mode)
+  ("\\.mts$" . typescript-ts-mode))
 (use-package ddgr
   :ensure t)
 (use-package tempel
@@ -1299,8 +1315,7 @@
 (use-package js
   :ensure nil
   :mode
-  ("\\.mjs$" . js-ts-mode)
-  ("\\.mts$" . typescript-ts-mode))
+  ("\\.mjs$" . js-ts-mode))
 
 (setopt disabled-command-function nil)
 

@@ -1,9 +1,24 @@
-(defvar enable-debug-p nil
-  "Non-nil to enable debug.")
-(setq gc-cons-threshold most-positive-fixnum)
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold (* 16 1024 1024))))
+;;; early-init.el --- Wadii's early init -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;;; Code:
+
+(setq load-prefer-newer t)
+
+(defconst wh--gc-cons-threshold (* 30 1024 1024))
+(defvar wh--file-name-handler-alist file-name-handler-alist)
+(defvar wh--vc-handled-backends vc-handled-backends)
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6
+      file-name-handler-alist nil
+      vc-handled-backends nil)
+(defun wh--post-init ()
+  "Post-initialization function."
+  (setq gc-cons-threshold wh--gc-cons-threshold
+        file-name-handler-alist wh--file-name-handler-alist
+        vc-handled-backends wh--vc-handled-backends))
+(add-hook 'after-init-hook #'wh--post-init)
 (setq byte-compile-warnings '(not obsolete))
 (setq warning-suppress-log-types '((comp) (bytecomp)))
 (setq initial-major-mode 'fundamental-mode)
@@ -15,7 +30,7 @@
       frame-resize-pixelwise t  ; fine resize
       package-native-compile t) ; native compile packages
 (setq native-comp-async-report-warnings-errors 'silent)
-(setq native-comp-warning-on-missing-source enable-debug-p)
+(setq native-comp-warning-on-missing-source nil)
 
 (setq auto-revert-check-vc-info nil)
 
@@ -45,3 +60,5 @@
 (package-initialize)
 
 (setq ns-use-thin-smoothing t)
+
+;;; early-init.el ends here.
