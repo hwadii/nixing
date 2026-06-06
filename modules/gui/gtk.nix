@@ -14,6 +14,7 @@
     theme = {
       name = "Adwaita";
     };
+    gtk4.theme = null;
     gtk4.extraConfig = {
       color-scheme = "prefer-dark";
       gtk-application-prefer-dark-theme = 1;

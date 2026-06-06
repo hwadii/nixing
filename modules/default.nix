@@ -25,6 +25,7 @@
 
   xdg.userDirs = {
     enable = true;
+    setSessionVariables = true;
     createDirectories = true;
     desktop = null;
     documents = "${config.home.homeDirectory}/docs";
@@ -48,7 +49,7 @@
     hunspellDicts.fr-any
     mise
     mpv
-    nixfmt-rfc-style
+    nixfmt
     nixfmt-tree
     numix-gtk-theme
     pavucontrol
