@@ -66,12 +66,17 @@
     variant = "compose:ralt";
   };
 
-  services.displayManager = {
-    gdm = {
-      enable = true;
-      wayland = true;
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.gtkgreet}/bin/gtkgreet --time --cmd niri-session";
+        user = "greeter";
+      };
     };
   };
+
+  systemd.user.services.niri.enableDefaultPath = false;
 
   programs.niri.enable = true;
 
