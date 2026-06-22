@@ -5,7 +5,7 @@
     enable = true;
     package = pkgs.caddy.withPlugins {
       plugins = [ "github.com/caddy-dns/porkbun@v0.3.1" ];
-      hash = "sha256-GKtPd73R/7ggu3fBFilkhyKi45lkAAQFsftwg5pmWW4=";
+      hash = "sha256-MlKX2obWac+jP4j9UHFMxsY/DRaqw9JCVAdI7erhFwo=";
     };
     virtualHosts."*.h.exondation.com".extraConfig = ''
       tls {
