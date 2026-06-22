@@ -70,11 +70,15 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.gtkgreet}/bin/gtkgreet --time --cmd niri-session";
+        command = "${pkgs.cage}/bin/cage -s -- ${pkgs.gtkgreet}/bin/gtkgreet";
         user = "greeter";
       };
     };
   };
+
+  environment.etc."greetd/environments".text = ''
+    ${pkgs.niri}/bin/niri-session
+  '';
 
   systemd.user.services.niri.enableDefaultPath = false;
 
