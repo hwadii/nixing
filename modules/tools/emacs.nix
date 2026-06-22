@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  home.packages = [ pkgs.imagemagick ];
+
   programs.emacs = {
     enable = true;
     package = pkgs.emacs-pgtk;
