@@ -34,7 +34,7 @@
 
 (setopt enable-recursive-minibuffers t)
 
-;; Keep the cursor out of the read-only portions of the.minibuffer
+;; Keep the cursor out of the read-only portions of the minibuffer
 (setq minibuffer-prompt-properties
       '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
@@ -473,6 +473,7 @@
   (magit-process-finish-apply-ansi-colors t)
   (magit-repository-directories '(("~/code/cardiologs". 1)))
   (magit-tramp-pipe-stty-settings 'pty)
+  (magit-diff-refine-hunk t)
   (magit-status-sections-hook
    '(magit-insert-status-headers
      magit-insert-merge-log
@@ -620,14 +621,19 @@
 (use-package csharp-ts-mode
   :ensure nil
   :mode "\\.cs\\'")
+(use-package python-ts-mode
+  :ensure nil
+  :mode "\\.py\\'")
 (use-package scala-ts-mode
   :ensure t
   :mode "\\.scala'")
 (use-package apheleia
   :ensure t
   :config
+  (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff-isort ruff))
+  (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff-isort ruff))
   (add-to-list 'apheleia-formatters '(csharpier "dotnet" "csharpier" "--write-stdout"))
-  :bind ("C-c l f a" . apheleia-format-buffer))
+  :bind ("C-c l f" . apheleia-format-buffer))
 (use-package csharp-mode
   :ensure nil
   :hook ((csharp-mode csharp-ts-mode) . (lambda () (setq fill-column 120))))
@@ -676,6 +682,7 @@
 (use-package ghostel
   :ensure t
   :hook (eshell-load . ghostel-eshell-visual-command-mode)
+  :pin melpa-stable
   :custom
   (ghostel-shell shell-file-name))
 (use-package which-key
@@ -696,48 +703,11 @@
   (defun wh-ansi-apply-color-on-buffer ()
     (interactive)
     (ansi-color-apply-on-region (point-min) (point-max) 'replace)))
-(use-package eglot
-  :ensure t
-  :custom
-  (eglot-autoshutdown t)
-  (eglot-sync-connect 3)
-  (eglot-stay-out-of nil)
-  (eglot-send-changes-idle-time 0.5)
-  (eglot-events-buffer-config :size 0)
-  (eglot-code-action-indications '(eldoc-hint))
-  (eglot-ignored-server-capabilities '(:semanticTokensProvider))
-  (eglot-workspace-configuration
-   '((:javascript
-      (:preferences
-       (:importModuleSpecifierEnding "shortest")))
-     (:typescript
-      (:preferences
-       (:importModuleSpecifierEnding "shortest")))))
-  :bind (("C-c l c" . eglot-reconnect)
-         ("C-c l d" . flymake-show-buffer-diagnostics)
-         ("C-c l f f" . eglot-format)
-         ("C-c l f b" . eglot-format-buffer)
-         ("C-c l l" . eglot)
-         ("C-c l r n" . eglot-rename)
-         ("C-c l s" . eglot-shutdown)
-         ("C-c l i" . eglot-inlay-hints-mode)
-         ("C-c l a" . eglot-code-actions))
-  :config
-  (add-to-list 'eglot-server-programs '((ruby-mode ruby-ts-mode) . ("ruby-lsp")))
-  (add-to-list 'eglot-server-programs '(scala-ts-mode . ("metals")) t)
-  (add-to-list 'eglot-server-programs '(zig-ts-mode . ("zls")) t)
-  (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")) t)
-  (add-to-list 'eglot-server-programs '((tsx-mode tsx-ts-mode) . ("tailwindcss-language-server" "--stdio")) t)
-  :hook
-  (eglot-managed-mode . (lambda () (eglot-inlay-hints-mode -1))))
 (use-package flymake
   :hook (prog-mode . flymake-mode)
   :custom
   (flymake-show-diagnostics-at-end-of-line nil)
-  (flymake-no-changes-timeout 0.5)
-  :bind (:map flymake-mode-map
-	          ("M-n" . flymake-goto-next-error)
-	          ("M-p" . flymake-goto-prev-error)))
+  (flymake-no-changes-timeout 0.5))
 (use-package fish-mode
   :ensure t)
 (use-package ispell
@@ -837,10 +807,7 @@
   (eshell-visual-commands '("nvim" "tmux" "top" "htop" "less" "newsboat" "nu")))
 (use-package em-hist
   :ensure nil
-  :after (eshell consult)
-  :bind
-  (:map eshell-hist-mode-map (("M-s" . consult-history)
-                              ("M-r" . consult-history))))
+  :after (eshell consult))
 (use-package marginalia
   :ensure t
   :custom (marginalia-mode 1))
@@ -879,13 +846,9 @@
 (use-package ef-themes
   :after modus-themes
   :ensure t)
-(use-package mise
-  :disabled
-  :ensure t
-  :hook (after-init . global-mise-mode))
 (use-package envrc
   :ensure t
-  :init (envrc-global-mode)
+  ;; :init (envrc-global-mode)
   :bind ("C-c e" . envrc-command-map))
 (use-package no-littering
   :ensure t
@@ -983,11 +946,7 @@
     t)
   (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
   :bind
-  (("C-:" . avy-goto-char-timer)
-   ("s-:" . casual-avy-tmenu)
-   ("M-g w" . avy-goto-word-1)
-   :map isearch-mode-map
-   ("C-'" . avy-isearch)))
+  ("s-:" . casual-avy-tmenu))
 (use-package ace-window
   :ensure t
   :custom
@@ -1007,99 +966,37 @@
 ;; Example configuration for Consult
 (use-package consult
   ;; Replace bindings. Lazily loaded by `use-package'.
-  :bind (;; C-c bindings in `mode-specific-map'
-         ("C-c M-x" . consult-mode-command)
-         ("C-c h" . consult-history)
-         ("C-c K" . consult-kmacro)
-         ("C-c m" . consult-man)
-         ("C-c i" . consult-info)
-         ([remap Info-search] . consult-info)
-         ;; C-x bindings in `ctl-x-map'
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-         ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
-         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ;; Custom M-# bindings for fast register access
-         ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
-         ;; Other custom bindings
-         ;; M-g bindings in `goto-map'
-         ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings in `search-map'
-         ("M-s d" . consult-fd)                  ;; Alternative: consult-fd
-         ("M-s c" . consult-locate)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
-         ;; Isearch integration
-         ("M-s e" . consult-isearch-history)
-         :map isearch-mode-map
-         ("M-e" . isearch-edit-string)         ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-         ;; Minibuffer history
-         :map minibuffer-local-map
-         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-         ("M-r" . consult-history))
-
-  ;; The :init configuration is always executed (Not lazy)
+  :bind
+  ("C-c M-x" . consult-mode-command)
+  ("C-c h" . consult-history)
+  ("C-c m" . consult-man)
+  ("C-c i" . consult-info)
+  ([remap Info-search] . consult-info)
+  ("C-x b" . consult-buffer)
+  ("C-x 4 b" . consult-buffer-other-window)
+  ("C-x 5 b" . consult-buffer-other-frame)
+  ("C-x t b" . consult-buffer-other-tab)
+  ("C-x r b" . consult-bookmark)
+  ("C-x p b" . consult-project-buffer)
+  ("C-x M-:" . consult-complex-command)
+  ("C-x r b" . consult-bookmark)
+  ("M-g M-e" . consult-compile-error)
+  ("M-g M-f" . consult-flymake)
+  ("M-g M-g" . consult-goto-line)
+  ("M-g M-o" . consult-outline)
+  ("M-g M-i" . consult-imenu)
+  ("M-g M-m" . consult-mark)
+  ("M-g M-SPC" . consult-global-mark)
+  ("M-s M-y" . consult-yank-pop)
+  ("M-s M-d" . consult-fd)
+  ("M-s M-r" . consult-ripgrep)
+  ("M-s M-l" . consult-line)
   :init
-
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
   (setq register-preview-delay 0.5
         register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Configure other variables and modes in the :config section,
-  ;; after lazily loading the package.
-  :config
-
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key "M-.")
-  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
-  (consult-customize
-   consult-ripgrep consult-git-grep consult-grep consult-man
-   consult-bookmark consult-recent-file consult-xref
-   consult-source-bookmark consult-source-file-register
-   consult-source-recent-file consult-source-project-recent-file
-   :preview-key '(:debounce 0.4 any))
-
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
   :custom
   (consult-narrow-key "<") ;; "C-+"
-  (consult-man-args (if (eq system-type 'darwin) "gman -k" "man -k"))
-  (consult-preview-key 'any)
-
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
-  )
+  (consult-man-args "man -k"))
 (use-package embark-consult
   :ensure t
   :after (embark consult))
@@ -1195,8 +1092,7 @@
   (lsp-disabled-clients '(ruby-ls rubocop-ls angular-ls))
   (lsp-enable-indentation nil)
   :hook
-  (lsp-mode . lsp-enable-which-key-integration)
-  ((csharp-mode csharp-ts-mode) . lsp))
+  (lsp-mode . lsp-enable-which-key-integration))
 (use-package exec-path-from-shell
   :ensure t
   :if (memq window-system '(mac ns x))
@@ -1238,6 +1134,7 @@
   (visual-replace-default-to-full-scope t))
 (use-package doom-modeline
   :ensure t
+  :pin melpa-stable
   :init (doom-modeline-mode 1)
   :custom
   (doom-modeline-minor-modes t)
@@ -1266,11 +1163,13 @@
   :commands nov-mode
   :ensure t)
 (use-package elfeed
+  :pin melpa-stable
   :ensure t
   :commands elfeed)
 (use-package elfeed-protocol
   :ensure t
   :after elfeed
+  :defer t
   :config
   (elfeed-protocol-enable)
   :custom

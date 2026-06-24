@@ -14,7 +14,18 @@
                                          (sql-port 54322)
                                          (sql-user "postgres")
                                          (sql-password "postgres")
-                                         (sql-database "postgres")))))
+                                         (sql-database "postgres"))))
+  (use-package lsp
+    :ensure nil
+    :hook
+    (tsx-ts-mode . lsp)
+    ((typescript-mode typescript-ts-mode) . lsp)
+    :custom
+    (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server"))
+  (use-package mise
+    :commands (global-mise-mode mise-update-dir)
+    :ensure t
+    :config (global-mise-mode)))
 
 (provide 'wh-tenderbolt)
 
