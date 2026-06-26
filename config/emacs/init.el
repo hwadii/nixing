@@ -1061,6 +1061,7 @@
   (smtpmail-smtp-service 465))
 (use-package eldoc-box
   :ensure t
+  :hook ((eglot-managed-mode lsp-mode) . eldoc-box-mouse-mode)
   :bind (("C-h ." . eldoc-box-help-at-point)))
 (use-package eldoc
   :ensure nil
@@ -1080,20 +1081,15 @@
   :init
   (setq lsp--show-message nil)
   :custom
+  (lsp-eldoc-render-all t)
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-modeline-code-actions-enable nil)
   (lsp-modeline-diagnostics-enable nil)
   (lsp-enable-snippet nil)
-  (lsp-ruby-lsp-use-bundler nil)
-  (lsp-solargraph-use-bundler nil)
-  (lsp-completion-provider :none)
-  (lsp-keymap-prefix "C-c l")
   (lsp-enable-suggest-server-download nil)
   (lsp-auto-guess-root t)
-  (lsp-csharp-server-install-dir "/Users/wadii/.config/emacs/var/lsp/server/omnisharp-roslyn/")
-  (lsp-csharp-omnisharp-enable-decompilation-support t)
   (lsp-progress-prefix nil)
-  (lsp-disabled-clients '(ruby-ls rubocop-ls angular-ls))
+  (lsp-disabled-clients '(ruby-ls rubocop-ls angular-ls tailwindcss))
   (lsp-enable-indentation nil)
   :hook
   (lsp-mode . lsp-enable-which-key-integration))
@@ -1144,7 +1140,7 @@
   (doom-modeline-minor-modes t)
   (doom-modeline-vcs-max-length 15)
   (doom-modeline-workspace-name nil)
-  (doom-modeline-height 21)
+  (doom-modeline-height 26)
   (doom-modeline-column-zero-based nil)
   (doom-modeline-total-line-number t)
   (doom-modeline-env-enable-ruby nil)

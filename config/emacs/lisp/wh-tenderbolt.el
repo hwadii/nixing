@@ -17,11 +17,14 @@
                                          (sql-database "postgres"))))
   (use-package lsp
     :ensure nil
+    :init
+    (setq lsp-tailwindcss-add-on-mode t)
+    (setq lsp-tailwindcss-skip-config-check t)
     :hook
     (tsx-ts-mode . lsp)
     ((typescript-mode typescript-ts-mode) . lsp)
     :custom
-    (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server"))
+    (lsp-tailwindcss-server-path (executable-find "tailwindcss-language-server")))
   (use-package mise
     :commands (global-mise-mode mise-update-dir)
     :ensure t
