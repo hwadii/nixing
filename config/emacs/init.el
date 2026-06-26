@@ -375,6 +375,10 @@
   (which-func-update-delay 1.0))
 (use-package project
   :ensure nil
+  :bind
+  (:map project-prefix-map
+        ("t" . ghostel-project)
+        ("m" . magit-project-status))
   :custom
   (project-vc-extra-root-markers '(".project"))
   (project-switch-commands '((project-find-file "Find" ?f)
