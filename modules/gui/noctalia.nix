@@ -17,19 +17,14 @@
         widgets = {
           left = [
             {
-              id = "ActiveWindow";
-              showIcon = true;
-              maxWidth = 512;
-            }
-            {
-              id = "MediaMini";
-            }
-          ];
-          center = [
-            {
               id = "Workspace";
               labelMode = "none";
               hideUnoccupied = false;
+            }
+            {
+              id = "ActiveWindow";
+              showIcon = true;
+              maxWidth = 512;
             }
           ];
           right = [
