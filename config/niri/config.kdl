@@ -376,6 +376,10 @@ binds {
     XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
     XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
 
+    Mod+Shift+P          allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    Mod+Shift+0          allow-when-locked=true { spawn-sh "playerctl previous"; }
+    Mod+Shift+9          allow-when-locked=true { spawn-sh "playerctl next"; }
+
     // Example brightness key mappings for brightnessctl.
     // You can use regular spawn with multiple arguments too (to avoid going through "sh"),
     // but you need to manually put each argument in separate "" quotes.
@@ -612,10 +616,6 @@ binds {
     Mod+Shift+E { quit; }
     Mod+SemiColon { spawn-sh "noctalia-shell ipc call launcher clipboard"; }
     Mod+Shift+O { spawn-sh "noctalia-shell ipc call launcher emoji"; }
-
-    // Powers off the monitors. To turn them back on, do any input like
-    // moving the mouse or pressing any other key.
-    Mod+Shift+P { power-off-monitors; }
 }
 
 debug {
