@@ -53,6 +53,7 @@
     nixfmt-tree
     numix-gtk-theme
     pavucontrol
+    playerctl
     qbittorrent
     ripgrep
     slurp
@@ -61,8 +62,8 @@
     unzip
     wl-clipboard
     wmenu
-    xdg-utils
     xdg-user-dirs
+    xdg-utils
     zathura
   ];
 
