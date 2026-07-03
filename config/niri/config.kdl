@@ -101,6 +101,11 @@ input {
     position x=1280 y=0
 }
 
+output "Dell Inc. DELL U2725QE 39HWPF4" {
+    mode "3840x2160@60"
+    scale 1.5
+}
+
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
 // https://niri-wm.github.io/niri/Configuration:-Layout
