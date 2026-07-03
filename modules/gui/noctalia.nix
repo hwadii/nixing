@@ -27,6 +27,7 @@
               maxWidth = 512;
             }
           ];
+          center = [];
           right = [
             {
               id = "Tray";

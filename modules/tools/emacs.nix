@@ -25,6 +25,7 @@
         grammars.tree-sitter-yaml
         grammars.tree-sitter-go
         grammars.tree-sitter-kdl
+        grammars.tree-sitter-python
       ]))
     ];
   };
