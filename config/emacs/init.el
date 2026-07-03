@@ -107,6 +107,7 @@
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-insert.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-eshell-prompt.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-fonts.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-lsp.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-tenderbolt.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "early-init.el"))
 
@@ -415,7 +416,8 @@
   :init
   (setopt read-file-name-completion-ignore-case t
           read-buffer-completion-ignore-case t)
-  (vertico-mode))
+  (vertico-mode +1)
+  (vertico-mouse-mode +1))
 (use-package vertico-directory
   :ensure nil
   :after vertico
@@ -495,7 +497,10 @@
      magit-insert-unpushed-to-upstream-or-recent
      magit-insert-unpulled-from-pushremote
      magit-insert-unpulled-from-upstream
-     forge-insert-pullreqs)))
+     forge-insert-pullreqs))
+  (magit-diff-fontify-hunk nil)
+  (magit-delete-by-moving-to-trash nil)
+  (magit-branch-name-suggestions '("wh/")))
 (use-package forge
   :ensure t
   :after magit
@@ -537,7 +542,7 @@
 (use-package org-modern
   :ensure t
   :custom
-  (org-modern-checkbox '((88 . "☑") (45 . #("□–" 0 2 (composition ((2))))) (32 . "□")))
+  (org-modern-checkbox nil)
   (org-modern-star 'fold)
   :hook
   (org-mode . org-modern-mode)
@@ -707,11 +712,6 @@
   (defun wh-ansi-apply-color-on-buffer ()
     (interactive)
     (ansi-color-apply-on-region (point-min) (point-max) 'replace)))
-(use-package flymake
-  :hook (prog-mode . flymake-mode)
-  :custom
-  (flymake-show-diagnostics-at-end-of-line nil)
-  (flymake-no-changes-timeout 0.5))
 (use-package fish-mode
   :ensure t)
 (use-package ispell
@@ -880,20 +880,17 @@
   (define-key global-map (kbd "C-c n") operate-on-number-repeat-map))
 (use-package embark
   :ensure t
-  :bind (("C-." . embark-act)
-         ("M-." . embark-dwim)
-         ("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
-         :map minibuffer-mode-map
-         ("C-c C-e" . embark-export)
-         ("C-c C-c" . embark-collect)
-         :map embark-general-map
-         ("W" . dictionary-search)
-         :map embark-identifier-map
-         ("R" . eglot-rename)
-         :map embark-flymake-map
-         ("A" . eglot-code-actions)
-         :map embark-become-file+buffer-map
-         ("t f" . find-file-other-tab))
+  :bind
+  ("C-." . embark-act)
+  ("M-." . embark-dwim)
+  ("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
+  (:map minibuffer-mode-map
+        ("C-c C-e" . embark-export)
+        ("C-c C-c" . embark-collect))
+  (:map embark-general-map
+        ("W" . dictionary-search))
+  (:map embark-become-file+buffer-map
+        ("t f" . find-file-other-tab))
   :init
   ;; Optionally replace the key help with a completing-read interface
   ;; (setq prefix-help-command #'embark-prefix-help-command)
@@ -912,9 +909,7 @@
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none))))
-  (push 'embark--ignore-target (alist-get 'eglot-code-actions embark-target-injection-hooks))
-  (push 'embark--ignore-target (alist-get 'eglot-rename embark-target-injection-hooks)))
+                 (window-parameters (mode-line-format . none)))))
 (use-package dictionary
   :ensure nil
   :custom
@@ -1061,7 +1056,11 @@
   (smtpmail-smtp-service 465))
 (use-package eldoc-box
   :ensure t
-  :hook ((eglot-managed-mode lsp-mode) . eldoc-box-mouse-mode)
+  :hook ((eglot-managed-mode lsp-mode) . eldoc-box-hover-mode)
+  :config
+  (set-face-attribute 'eldoc-box-body nil :inherit 'variable-pitch)
+  :custom
+  (eldoc-box-clear-with-C-g t)
   :bind (("C-h ." . eldoc-box-help-at-point)))
 (use-package eldoc
   :ensure nil
@@ -1075,24 +1074,6 @@
   :pin gnu
   :init
   (editorconfig-mode 1))
-(use-package lsp-mode
-  :ensure t
-  :diminish (lsp-mode . "LSP")
-  :init
-  (setq lsp--show-message nil)
-  :custom
-  (lsp-eldoc-render-all t)
-  (lsp-headerline-breadcrumb-enable nil)
-  (lsp-modeline-code-actions-enable nil)
-  (lsp-modeline-diagnostics-enable nil)
-  (lsp-enable-snippet nil)
-  (lsp-enable-suggest-server-download nil)
-  (lsp-auto-guess-root t)
-  (lsp-progress-prefix nil)
-  (lsp-disabled-clients '(ruby-ls rubocop-ls angular-ls tailwindcss))
-  (lsp-enable-indentation nil)
-  :hook
-  (lsp-mode . lsp-enable-which-key-integration))
 (use-package exec-path-from-shell
   :ensure t
   :if (memq window-system '(mac ns x))
@@ -1198,6 +1179,8 @@
   (d2-ts-mode-output-format "png"))
 (use-package typescript-ts-mode
   :ensure nil
+  :hook
+  (eldoc-box-buffer-setup-hook . eldoc-box-prettify-ts-errors)
   :mode
   ("\\.tsx$" . tsx-ts-mode)
   ("\\.mts$" . typescript-ts-mode))
@@ -1222,7 +1205,7 @@
 (require 'wh-browse)
 (require 'wh-insert)
 (require 'wh-eshell-prompt)
-(require 'wh-eglot)
+(require 'wh-lsp)
 (require 'wh-fonts)
 (require 'wh-tenderbolt)
 

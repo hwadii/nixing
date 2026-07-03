@@ -20,9 +20,6 @@
     :init
     (setq lsp-tailwindcss-add-on-mode t)
     (setq lsp-tailwindcss-skip-config-check t)
-    :hook
-    (tsx-ts-mode . lsp)
-    ((typescript-mode typescript-ts-mode) . lsp)
     :custom
     (lsp-tailwindcss-server-path (executable-find "tailwindcss-language-server")))
   (use-package mise
