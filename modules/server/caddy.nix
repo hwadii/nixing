@@ -36,6 +36,10 @@
       handle @papers {
         reverse_proxy 127.0.0.1:28981
       }
+      @photos host photos.h.exondation.com
+      handle @photos {
+        reverse_proxy 127.0.0.1:2283
+      }
     '';
   };
 

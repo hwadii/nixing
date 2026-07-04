@@ -7,5 +7,6 @@
     ./dns.nix
     ./caddy.nix
     ./paperless.nix
+    ./immich.nix
   ];
 }
