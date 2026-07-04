@@ -6,5 +6,6 @@
     ./syncthing.nix
     ./dns.nix
     ./caddy.nix
+    ./paperless.nix
   ];
 }

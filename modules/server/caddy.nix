@@ -32,6 +32,10 @@
       handle @torrent {
         reverse_proxy 127.0.0.1:8097
       }
+      @papers host papers.h.exondation.com
+      handle @papers {
+        reverse_proxy 127.0.0.1:28981
+      }
     '';
   };
 

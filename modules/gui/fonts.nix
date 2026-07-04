@@ -7,6 +7,7 @@
     atkinson-hyperlegible-next
     dejavu_fonts
     fantasque-sans-mono
+    ibm-plex
     input-fonts
     iosevka-bin
     jetbrains-mono
