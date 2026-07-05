@@ -203,11 +203,11 @@
 (use-package dired-x
   :ensure nil
   :after dired
-  :hook ((dired-mode . dired-omit-mode)
-         (dired-mode . dired-hide-details-mode)
-         (dired-mode . hl-line-mode))
+  :hook
+  (dired-mode . dired-omit-mode)
+  (dired-mode . dired-hide-details-mode)
+  (dired-mode . hl-line-mode)
   :custom
-  (dired-omit-mode nil t)
   (dired-omit-size-limit 60000)
   (dired-omit-verbose nil))
 (use-package dired-filter

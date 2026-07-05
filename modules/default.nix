@@ -33,6 +33,7 @@
     pictures = "${config.home.homeDirectory}/pics";
     music = "${config.home.homeDirectory}/music";
     videos = "${config.home.homeDirectory}/videos";
+    projects = "${config.home.homeDirectory}/dev";
     templates = null;
     publicShare = null;
   };
