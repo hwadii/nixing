@@ -49,14 +49,12 @@
 
 ;; Enable installation of packages from MELPA.
 (setq package-enable-at-startup nil)
-(setq package-archives '(("melpa"        . "https://melpa.org/packages/")
+(setq package-archives '(("melpa"        . "https://releases.melpa.org/packages/")
                          ("gnu"          . "https://elpa.gnu.org/packages/")
-                         ("nongnu"       . "https://elpa.nongnu.org/nongnu/")
-                         ("melpa-stable" . "https://stable.melpa.org/packages/")))
+                         ("nongnu"       . "https://elpa.nongnu.org/nongnu/")))
 (setq package-archive-priorities '(("gnu"    . 99)
                                    ("nongnu" . 80)
-                                   ("melpa"  . 70)
-                                   ("melpa-stable" . 50)))
+                                   ("melpa"  . 70)))
 (package-initialize)
 
 (setq ns-use-thin-smoothing t)

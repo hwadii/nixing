@@ -691,7 +691,7 @@
 (use-package ghostel
   :ensure t
   :hook (eshell-load . ghostel-eshell-visual-command-mode)
-  :pin melpa-stable
+  :pin melpa
   :custom
   (ghostel-shell shell-file-name))
 (use-package which-key
@@ -1115,7 +1115,7 @@
   (visual-replace-default-to-full-scope t))
 (use-package doom-modeline
   :ensure t
-  :pin melpa-stable
+  :pin melpa
   :init (doom-modeline-mode 1)
   :custom
   (doom-modeline-minor-modes t)
@@ -1144,7 +1144,7 @@
   :commands nov-mode
   :ensure t)
 (use-package elfeed
-  :pin melpa-stable
+  :pin melpa
   :ensure t
   :commands elfeed)
 (use-package elfeed-protocol
