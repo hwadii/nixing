@@ -17,6 +17,7 @@
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
     source-code-pro
+    source-sans-pro
   ];
 
   fonts.fontconfig = {

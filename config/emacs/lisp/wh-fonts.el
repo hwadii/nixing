@@ -12,18 +12,18 @@
   :custom
   (fontaine-presets
    '((regular
-      :default-family "JetBrains Mono NL"
+      :default-family "Source Code Pro"
       :default-height 160
-      :default-weight regular
-      :fixed-pitch-family "JetBrains Mono NL"
-      :fixed-pitch-weight regular
-      :variable-pitch-family "IBM Plex Sans Condensed"
+      :default-weight medium
+      :fixed-pitch-family "Source Code Pro"
+      :fixed-pitch-weight medium
+      :variable-pitch-family "Source Sans Pro"
       :variable-pitch-height 160
       :variable-pitch-weight regular)
      (regular-macos
       :inherit regular
-      :default-weight semi-light
-      :fixed-pitch-weight semi-light))))
+      :default-weight regular
+      :fixed-pitch-weight regular))))
 
 (set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
 (set-fontset-font t nil "Symbols Nerd Font" nil 'append)
