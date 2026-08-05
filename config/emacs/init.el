@@ -109,6 +109,7 @@
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-fonts.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-lsp.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-tenderbolt.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-embark-browse.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "early-init.el"))
 
 (defvar-keymap wh-notes-map
@@ -1208,6 +1209,7 @@
 (require 'wh-lsp)
 (require 'wh-fonts)
 (require 'wh-tenderbolt)
+(require 'wh-embark-browse)
 
 (provide 'init)
 
