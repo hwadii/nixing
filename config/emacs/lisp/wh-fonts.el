@@ -14,16 +14,17 @@
    '((regular
       :default-family "Source Code Pro"
       :default-height 160
-      :default-weight medium
-      :fixed-pitch-family "Source Code Pro"
-      :fixed-pitch-weight medium
-      :variable-pitch-family "Source Sans Pro"
-      :variable-pitch-height 160
-      :variable-pitch-weight regular)
-     (regular-macos
-      :inherit regular
       :default-weight regular
-      :fixed-pitch-weight regular))))
+      :default-width normal
+      :fixed-pitch-family "Source Code Pro"
+      :fixed-pitch-weight regular
+      :variable-pitch-family "Source Sans 3"
+     (t
+      :mode-line-active-family "Source Sans 3"
+      :mode-line-inactive-family "Source Sans 3"
+      :header-line-family "Source Sans 3"
+      :tab-bar-family "Source Sans 3"
+      :tab-line-family "Source Sans 3")))))
 
 (set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
 (set-fontset-font t nil "Symbols Nerd Font" nil 'append)
