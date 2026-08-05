@@ -25,7 +25,10 @@
   (use-package mise
     :commands (global-mise-mode mise-update-dir)
     :ensure t
-    :config (global-mise-mode)))
+    :config (global-mise-mode))
+  (use-package magit
+    :config
+    (add-to-list 'magit-repository-directories '("~/dev/tenderbolt" . 1))))
 
 (provide 'wh-tenderbolt)
 
