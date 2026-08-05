@@ -378,19 +378,18 @@
 (use-package project
   :ensure nil
   :bind
-  (:map project-prefix-map
-        ("t" . ghostel-project)
-        ("m" . magit-project-status))
   :custom
   (project-vc-extra-root-markers '(".project"))
   (project-switch-commands '((project-find-file "Find" ?f)
                              (project-find-dir "Directory" ?d)
                              (consult-ripgrep "Ripgrep" ?r)
                              (magit-project-status "Magit" ?m)
+                             (magit-project-dispatch "Magit Dispatch" ?M)
                              (project-eshell "Eshell" ?e)
                              (consult-project-buffer "Buffers" ?b)
                              (ghostel-project "Term" ?t)
-                             (project-any-command "Other" ?o))))
+                             (project-any-command "Other" ?o)
+                             (casual-editkit-project-tmenu "Help" ??))))
 (use-package savehist
   :ensure nil
   :custom
@@ -418,16 +417,11 @@
   (setopt read-file-name-completion-ignore-case t
           read-buffer-completion-ignore-case t)
   (vertico-mode +1)
-  (vertico-mouse-mode +1))
+  (vertico-mouse-mode -1))
 (use-package vertico-directory
   :ensure nil
   :after vertico
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
-  :demand
-  :bind (:map vertico-map
-              ("RET"   . vertico-directory-enter)
-              ("DEL"   . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word)))
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 (use-package vertico-repeat
   :after vertico
   :ensure nil
@@ -451,9 +445,8 @@
                   (apply args)))))
 (use-package markdown-mode
   :ensure t
-  :bind (:map markdown-mode-map
-              ("C-." . embark-act))
   :custom
+  (markdown-command "pandoc")
   (markdown-fontify-code-blocks-natively nil))
 (use-package markdown-ts-mode
   :ensure t
@@ -470,35 +463,22 @@
   :ensure t
   :after transient
   :pin nongnu
+  :bind
+  (:map project-prefix-map
+        ("m" . magit-project-status)
+        ("M" . magit-project-dispatch))
   :config
-  (add-hook 'magit-status-sections-hook #'magit-insert-worktrees t)
+  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-worktrees nil t)
+  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules nil t)
   :custom
   (magit-define-global-key-bindings 'recommended)
   (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
   (magit-format-file-function 'magit-format-file-nerd-icons)
   (magit-save-repository-buffers nil)
-  (magit-process-finish-apply-ansi-colors t)
-  (magit-repository-directories '(("~/code/cardiologs". 1)))
+  (magit-process-apply-ansi-colors t)
+  (magit-repository-directories '(("~/dev/sources". 1)))
   (magit-tramp-pipe-stty-settings 'pty)
   (magit-diff-refine-hunk t)
-  (magit-status-sections-hook
-   '(magit-insert-status-headers
-     magit-insert-merge-log
-     magit-insert-rebase-sequence
-     magit-insert-am-sequence
-     magit-insert-sequencer-sequence
-     magit-insert-bisect-output
-     magit-insert-bisect-rest
-     magit-insert-bisect-log
-     magit-insert-untracked-files
-     magit-insert-unstaged-changes
-     magit-insert-staged-changes
-     magit-insert-stashes
-     magit-insert-unpushed-to-pushremote
-     magit-insert-unpushed-to-upstream-or-recent
-     magit-insert-unpulled-from-pushremote
-     magit-insert-unpulled-from-upstream
-     forge-insert-pullreqs))
   (magit-diff-fontify-hunk nil)
   (magit-delete-by-moving-to-trash nil)
   (magit-branch-name-suggestions '("wh/")))
@@ -691,10 +671,18 @@
   :bind ("C-c p" . cape-prefix-map))
 (use-package ghostel
   :ensure t
-  :hook (eshell-load . ghostel-eshell-visual-command-mode)
   :pin melpa
+  :bind
+  (:map project-prefix-map
+        ("t" . ghostel-project)
+        ("T" . ghostel-project-list-buffers))
   :custom
   (ghostel-shell shell-file-name))
+(use-package ghostel-eshell
+  :ensure nil
+  :hook (eshell-load . ghostel-eshell-visual-command-mode))
+(use-package ghostel-compile
+  :ensure nil)
 (use-package which-key
   :ensure nil
   :pin gnu
@@ -730,11 +718,9 @@
   :hook ((markdown-mode org-mode tex-mode) . jinx-mode)
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages)))
-(use-package password-store-menu
-  :ensure t
-  :bind (:map wh-map ("p" . password-store-menu))
-  :custom
-  (password-store-menu-key nil))
+(use-package password-store
+  :pin melpa
+  :ensure t)
 (use-package rg
   :ensure t
   :config (rg-enable-default-bindings)
@@ -812,7 +798,11 @@
   (eshell-visual-commands '("nvim" "tmux" "top" "htop" "less" "newsboat" "nu")))
 (use-package em-hist
   :ensure nil
-  :after (eshell consult))
+  :after consult
+  :bind
+  (:map eshell-hist-mode-map
+        ("M-s" . nil)
+        ("M-r" . nil)))
 (use-package marginalia
   :ensure t
   :custom (marginalia-mode 1))
@@ -843,6 +833,7 @@
   (:map eshell-mode-map ("C-c C-/" . casual-eshell-tmenu))
   (:map org-mode-map ("C-c C-/" . casual-org-tmenu))
   (:map wh-map ("t" . casual-timezone-tmenu))
+  (:map project-prefix-map ("?" . casual-editkit-project-tmenu))
   :custom
   (casual-lib-use-unicode nil))
 (use-package casual-avy
@@ -883,34 +874,16 @@
   :ensure t
   :bind
   ("C-." . embark-act)
-  ("M-." . embark-dwim)
+  ("C-;" . embark-dwim)
   ("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
-  (:map minibuffer-mode-map
-        ("C-c C-e" . embark-export)
-        ("C-c C-c" . embark-collect))
   (:map embark-general-map
         ("W" . dictionary-search))
-  (:map embark-become-file+buffer-map
-        ("t f" . find-file-other-tab))
-  :init
-  ;; Optionally replace the key help with a completing-read interface
-  ;; (setq prefix-help-command #'embark-prefix-help-command)
   :custom
   (embark-indicators
    '(embark-minimal-indicator  ; default is embark-mixed-indicator
      embark-highlight-indicator
      embark-isearch-highlight-indicator))
-  (embark-quit-after-action t)
-  ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
-  ;; strategy, if you want to see the documentation from multiple providers.
-  ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-  ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
-  :config
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
+  (embark-quit-after-action t))
 (use-package dictionary
   :ensure nil
   :custom
@@ -965,7 +938,6 @@
   (calendar-mark-diary-flags t))
 ;; Example configuration for Consult
 (use-package consult
-  ;; Replace bindings. Lazily loaded by `use-package'.
   :bind
   ("C-c M-x" . consult-mode-command)
   ("C-c h" . consult-history)
@@ -1047,7 +1019,7 @@
   (modus-themes-variable-pitch-ui t)
   (modus-themes-italic-constructs t)
   (modus-themes-bold-constructs t)
-  (modus-themes-to-toggle '(ef-day ef-rosa))
+  (modus-themes-to-toggle '(ef-day ef-symbiosis))
   (modus-themes-to-rotate '(ef-day ef-rosa ef-duo-light ef-autumn)))
 (use-package smtpmail
   :ensure nil
@@ -1122,7 +1094,6 @@
   (doom-modeline-minor-modes t)
   (doom-modeline-vcs-max-length 15)
   (doom-modeline-workspace-name nil)
-  (doom-modeline-height 26)
   (doom-modeline-column-zero-based nil)
   (doom-modeline-total-line-number t)
   (doom-modeline-env-enable-ruby nil)
@@ -1147,19 +1118,19 @@
 (use-package elfeed
   :pin melpa
   :ensure t
-  :commands elfeed)
+  :commands elfeed
+  :custom
+  (elfeed-feeds '(("fever+https://wadii@feed.exondation.com"
+                   :api-url "https://feed.exondation.com/fever/"
+                   :use-authinfo t))))
 (use-package elfeed-protocol
   :ensure t
   :after elfeed
-  :defer t
   :config
   (elfeed-protocol-enable)
   :custom
   (elfeed-protocol-fever-update-unread-only nil)
-  (elfeed-protocol-fever-fetch-category-as-tag t)
-  (elfeed-protocol-feeds '(("fever+https://wadii@feed.exondation.com"
-                            :api-url "https://feed.exondation.com/fever/"
-                            :use-authinfo t))))
+  (elfeed-protocol-fever-fetch-category-as-tag t))
 (use-package ns-auto-titlebar
   :ensure t
   :if (eq system-type 'darwin)
