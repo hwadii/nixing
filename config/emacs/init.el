@@ -707,7 +707,7 @@
   :hook ((markdown-mode org-mode tex-mode) . jinx-mode)
   :bind
   ("M-$" . jinx-correct)
-  ("C-M-$" . jinx-languages)
+  ("C-M-$" . jinx-languages))
 (use-package password-store
   :pin melpa
   :ensure t)
@@ -1038,7 +1038,7 @@
   (editorconfig-mode 1))
 (use-package exec-path-from-shell
   :ensure t
-  :if (eq system-type 'darwin))
+  :if (eq system-type 'darwin)
   :init
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-envs '("PASSWORD_STORE_DIR" "BROWSER" "COMPOSE_BAKE" "XDG_CONFIG_HOME" "RIPGREP_CONFIG_PATH"
@@ -1157,7 +1157,8 @@
 (require 'wh-eshell-prompt)
 (require 'wh-lsp)
 (require 'wh-fonts)
-(require 'wh-tenderbolt)
+(when (string-equal (system-name) "silverwing")
+  (require 'wh-tenderbolt))
 (require 'wh-embark-browse)
 
 (provide 'init)
