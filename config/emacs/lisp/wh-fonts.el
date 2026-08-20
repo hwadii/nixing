@@ -18,14 +18,10 @@
       :default-width normal
       :fixed-pitch-family "Source Code Pro"
       :fixed-pitch-weight regular
-      :variable-pitch-family "Source Sans 3"
-     (t
-      :mode-line-active-family "Source Sans 3"
-      :mode-line-inactive-family "Source Sans 3"
-      :header-line-family "Source Sans 3"
-      :tab-bar-family "Source Sans 3"
-      :tab-line-family "Source Sans 3")))))
+      :variable-pitch-family "Work Sans"
+      :variable-pitch-height 150))))
 
+(set-fontset-font t nil "DejaVu Sans Mono" nil 'append)
 (set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
 (set-fontset-font t nil "Symbols Nerd Font" nil 'append)
 
