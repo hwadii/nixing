@@ -807,24 +807,19 @@
   (orderless-matching-styles '(orderless-literal orderless-regexp)))
 (use-package casual
   :ensure t
-  :init (require 'casual-image)
-  :bind
-  (:map calc-mode-map ("?" . casual-calc-tmenu))
-  (:map ibuffer-mode-map ("?" . casual-ibuffer-tmenu))
-  (:map dired-mode-map ("?" . casual-dired-tmenu))
-  (:map image-mode-map ("?" . casual-image-tmenu))
-  (:map calendar-mode-map ("?" . casual-calendar-tmenu))
-  (:map compilation-mode-map ("?" . casual-compile-tmenu))
-  (:map help-mode-map ("?" . casual-help-tmenu))
-  (:map Man-mode-map ("?" . casual-man-tmenu))
-  (:map Info-mode-map ("?" . casual-info-tmenu))
-  (:map reb-mode-map ("C-c C-/" . casual-re-builder-tmenu))
-  (:map eshell-mode-map ("C-c C-/" . casual-eshell-tmenu))
-  (:map org-mode-map ("C-c C-/" . casual-org-tmenu))
-  (:map wh-map ("t" . casual-timezone-tmenu))
-  (:map project-prefix-map ("?" . casual-editkit-project-tmenu))
+  :init (casual-init)
   :custom
-  (casual-lib-use-unicode nil))
+  (casual-init-hook
+   '(casual-agenda-init casual-calc-init casual-calendar-init
+                        casual-dired-init casual-eshell-init
+                        casual-eww-init casual-help-init
+                        casual-ibuffer-init casual-image-init
+                        casual-info-init casual-compile-init
+                        casual-man-init casual-org-init casual-re-builder-init))
+  (casual-lib-use-unicode nil)
+  :bind
+  (:map wh-map ("t" . casual-timezone-tmenu))
+  (:map project-prefix-map ("?" . casual-editkit-project-tmenu)))
 (use-package casual-avy
   :ensure t
   :after casual)
