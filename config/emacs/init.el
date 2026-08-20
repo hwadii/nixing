@@ -413,6 +413,11 @@
   :ensure t
   :custom
   (vertico-cycle t)
+  :bind
+  (:map vertico-map
+        ("RET" . vertico-directory-enter)
+        ("DEL" . vertico-directory-delete-char)
+        ("M-DEL" . vertico-directory-delete-word))
   :init
   (setopt read-file-name-completion-ignore-case t
           read-buffer-completion-ignore-case t)
