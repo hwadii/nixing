@@ -503,11 +503,9 @@
   :ensure t
   :custom
   (pdf-view-display-size 'fit-page))
-(use-package ob-deno
-  :after org
-  :ensure t)
 (use-package org
-  :ensure nil
+  :ensure t
+  :pin gnu
   :init
   (require 'ox-md)
   (require 'ob-deno)
@@ -575,11 +573,9 @@
   (shr-use-fonts nil))
 (use-package tree-sitter-langs ;; grammar bundle
   :ensure t
-  :after tree-sitter
   :custom (global-tree-sitter-mode t))
 (use-package treesit-auto ;; auto-install missing grammars
   :ensure t
-  :after tree-sitter
   :config (global-treesit-auto-mode))
 (use-package treesit-fold ;; enable code folding based on tree-sitter
   :ensure t
@@ -687,7 +683,8 @@
   :ensure nil
   :hook (eshell-load . ghostel-eshell-visual-command-mode))
 (use-package ghostel-compile
-  :ensure nil)
+  :ensure nil
+  :config (ghostel-compile-global-mode))
 (use-package which-key
   :ensure nil
   :pin gnu
@@ -697,9 +694,6 @@
   (which-key-idle-delay 10000.1)
   (which-key-idle-secondary-delay 0.05)
   :config (which-key-mode))
-(use-package sudo-utils
-  :ensure t
-  :bind ("C-M-!" . sudo-utils-shell-command))
 (use-package ansi-color
   :hook (compilation-filter . ansi-color-compilation-filter)
   :config
@@ -708,21 +702,12 @@
     (ansi-color-apply-on-region (point-min) (point-max) 'replace)))
 (use-package fish-mode
   :ensure t)
-(use-package ispell
-  :ensure nil)
-(use-package flyspell
-  :ensure nil
-  :after ispell
-  :bind (:map flyspell-mode-map
-              ("C-." . nil)
-              ("C-M-;" . flyspell-auto-correct-word))
-  :custom
-  (flyspell-auto-correct-binding (kbd "C-;")))
 (use-package jinx
   :ensure t
   :hook ((markdown-mode org-mode tex-mode) . jinx-mode)
-  :bind (("M-$" . jinx-correct)
-         ("C-M-$" . jinx-languages)))
+  :bind
+  ("M-$" . jinx-correct)
+  ("C-M-$" . jinx-languages)
 (use-package password-store
   :pin melpa
   :ensure t)
@@ -811,7 +796,6 @@
 (use-package marginalia
   :ensure t
   :custom (marginalia-mode 1))
-(use-package inf-ruby :ensure t)
 (use-package orderless
   :ensure t
   :after vertico
@@ -849,7 +833,8 @@
   :ensure t)
 (use-package envrc
   :ensure t
-  ;; :init (envrc-global-mode)
+  :if (not (eq system-type 'darwin))
+  :init (envrc-global-mode)
   :bind ("C-c e" . envrc-command-map))
 (use-package no-littering
   :ensure t
@@ -933,7 +918,7 @@
   ("M-o" . ace-window))
 (use-package calendar
   :ensure nil
-  :bind ("C-c c" . calendar)
+  :bind (:map wh-map ("c" . calendar))
   :custom
   (calendar-week-start-day 1)
   (calendar-latitude [48 51 24 north])
@@ -941,7 +926,6 @@
   (calendar-location-name "Paris, FR")
   (calendar-mark-holidays t)
   (calendar-mark-diary-flags t))
-;; Example configuration for Consult
 (use-package consult
   :bind
   ("C-c M-x" . consult-mode-command)
@@ -992,14 +976,6 @@
   :custom
   (scroll-conservatively 3)
   (scroll-margin 0))
-(use-package standard-themes
-  :disabled
-  :ensure t
-  :custom
-  (standard-themes-variable-pitch-ui t)
-  (standard-themes-bold-constructs t)
-  (standard-themes-italic-constructs t)
-  (standard-themes-mixed-fonts t))
 (use-package yaml-ts-mode
   :ensure nil
   :mode "\\.ya?ml\\'")
@@ -1017,21 +993,34 @@
   :ensure t
   :init
   (modus-themes-include-derivatives-mode)
-  :config
-  (modus-themes-load-theme 'modus-vivendi-tritanopia)
   :custom
   (modus-themes-mixed-fonts t)
   (modus-themes-variable-pitch-ui t)
   (modus-themes-italic-constructs t)
-  (modus-themes-bold-constructs t)
-  (modus-themes-to-toggle '(ef-day ef-symbiosis))
-  (modus-themes-to-rotate '(ef-day ef-rosa ef-duo-light ef-autumn)))
+  (modus-themes-bold-constructs t))
 (use-package smtpmail
   :ensure nil
   :custom
-  (smtpmail-debug-info t)
-  (smtpmail-smtp-server "smtp.mail.yahoo.com")
-  (smtpmail-smtp-service 465))
+  (smtpmail-smtp-server "127.0.0.1")
+  (smtpmail-smtp-service 1025)
+  (smtpmail-stream-type 'starttls)
+  (smtpmail-smtp-user "wadii.hajji@proton.me"))
+(use-package sendmail
+  :ensure nil
+  :custom
+  (send-mail-function #'smtpmail-send-it))
+(use-package gnus
+  :ensure nil
+  :custom
+  (gnus-select-method '(nnnil ""))
+  (gnus-secondary-select-methods
+   '((nnimap "proton"
+             (nnimap-address "127.0.0.1")
+             (nnimap-server-port 1143)
+             (nnimap-stream starttls)
+             (nnimap-authenticator login))))
+  (gnus-permanently-visible-groups "INBOX\\|Sent\\|Archive")
+  (message-send-mail-function #'smtpmail-send-it))
 (use-package eldoc-box
   :ensure t
   :hook ((eglot-managed-mode lsp-mode) . eldoc-box-hover-mode)
@@ -1054,7 +1043,7 @@
   (editorconfig-mode 1))
 (use-package exec-path-from-shell
   :ensure t
-  :if (memq window-system '(mac ns x))
+  :if (eq system-type 'darwin))
   :init
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-envs '("PASSWORD_STORE_DIR" "BROWSER" "COMPOSE_BAKE" "XDG_CONFIG_HOME" "RIPGREP_CONFIG_PATH"
@@ -1102,12 +1091,9 @@
   (doom-modeline-column-zero-based nil)
   (doom-modeline-total-line-number t)
   (doom-modeline-env-enable-ruby nil)
-  (doom-modeline-icon t))
-(use-package kubed
-  :if (memq window-system '(mac ns))
-  :ensure t
-  :bind-keymap ("C-c k" . kubed-prefix-map)
-  :bind (:map kubed-prefix-map ("k" . kubed-transient)))
+  (doom-modeline-icon t)
+  (doom-modeline-lsp t)
+  (doom-modeline-check 'simple))
 (use-package man
   :ensure nil
   :custom
@@ -1116,9 +1102,6 @@
   :ensure t
   :init (stillness-mode))
 (use-package request
-  :ensure t)
-(use-package nov
-  :commands nov-mode
   :ensure t)
 (use-package elfeed
   :pin melpa
@@ -1134,7 +1117,7 @@
   :config
   (elfeed-protocol-enable)
   :custom
-  (elfeed-protocol-fever-update-unread-only nil)
+  (elfeed-protocol-fever-update-unread-only t)
   (elfeed-protocol-fever-fetch-category-as-tag t))
 (use-package ns-auto-titlebar
   :ensure t
@@ -1149,11 +1132,6 @@
   :ensure t)
 (use-package typst-ts-mode
   :ensure t)
-(use-package d2-ts-mode
-  :mode "\\.d2\\'"
-  :ensure t
-  :custom
-  (d2-ts-mode-output-format "png"))
 (use-package typescript-ts-mode
   :ensure nil
   :hook
