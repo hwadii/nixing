@@ -1,0 +1,6 @@
+font-family = "Source Code Pro"
+font-size = 16
+macos-option-as-alt = true
+shell-integration-features = ssh-env,ssh-terminfo
+keybind = ctrl+m=text:\r
+config-file = ?config-mac

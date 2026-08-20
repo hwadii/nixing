@@ -1,0 +1,4 @@
+# -*- mode: conf -*-
+
+background-opacity = 0.2
+background-blur = macos-glass-regular
