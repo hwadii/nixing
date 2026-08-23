@@ -218,6 +218,8 @@
 (use-package hl-line
   :ensure nil
   :hook ((text-mode prog-mode tabulated-list-mode) . hl-line-mode))
+(use-package hl-todo
+  :ensure t)
 (use-package dired-aux
   :ensure nil
   :custom
@@ -485,6 +487,8 @@
   (magit-tramp-pipe-stty-settings 'pty)
   (magit-diff-refine-hunk t)
   (magit-diff-fontify-hunk nil)
+  (magit-diff-specify-hunk-foreground t)
+  (magit-diff-use-indicator-faces t)
   (magit-delete-by-moving-to-trash nil)
   (magit-branch-name-suggestions '("wh/")))
 (use-package forge
@@ -1138,8 +1142,7 @@
   :ensure t)
 (use-package tempel
   :ensure t
-  :bind ("M-*" . tempel-expand)
-  :config (global-tempel-abbrev-mode))
+  :bind ("M-*" . tempel-complete))
 (use-package sql
   :ensure nil
   :custom
