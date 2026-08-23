@@ -34,18 +34,42 @@
 (defun tenderbolt-compile-frontend ()
   "Compile the Tenderbolt frontend with the correct `default-directory'."
   (interactive)
-  (let ((default-directory (file-name-concat (project-root (project-current t)) "frontend")))
+  (let* ((root (project-root (project-current t)))
+        (default-directory (file-name-concat root "frontend")))
     (compile "mise run compile")))
+
+(defun tenderbolt-test-frontend ()
+  "Test the Tenderbolt frontend with the correct `default-directory'."
+  (interactive)
+  (let* ((root (project-root (project-current t)))
+        (default-directory (file-name-concat root "frontend")))
+    (compile "yarn test")))
 
 (defun tenderbolt-run-frontend ()
   "Run the Tenderbolt frontend using pitchfork."
   (interactive)
   (async-shell-command "pitchfork start -f ui"))
 
+(defun tenderbolt-run-robot (&optional arg)
+  "Run a robot session within Tenderbolt.
+Pop to the existing session if there is one, otherwise create one.
+If ARG is passed, create a new buffer."
+  (interactive "P")
+  (let* ((proj (project-current t))
+         (default-directory (project-root proj))
+         (name "*claude: tenderbolt*")
+         (existing (get-buffer name)))
+    (if (and existing (not arg))
+        (pop-to-buffer-same-window existing)
+      (let ((buf (generate-new-buffer name)))
+        (ghostel-exec buf "claude")
+        (pop-to-buffer-same-window buf)))))
+
 (defvar-keymap tenderbolt-command-map
   :doc "Tenderbolt commands."
   "c" #'tenderbolt-compile-frontend
-  "r" #'tenderbolt-run-frontend)
+  "r" #'tenderbolt-run-frontend
+  "b" #'tenderbolt-run-robot)
 
 (defvar-keymap tenderbolt-mode-map
   :doc "Keymap for `tenderbolt-mode'."
