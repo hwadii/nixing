@@ -3,21 +3,15 @@
 {
   home.packages = with pkgs; [
     adwaita-fonts
-    aporetic-bin
     atkinson-hyperlegible-next
+    atkinson-hyperlegible-mono
     dejavu_fonts
-    fantasque-sans-mono
-    ibm-plex
-    input-fonts
-    iosevka-bin
-    jetbrains-mono
-    julia-mono
-    lexend
     newcomputermodern
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
     source-code-pro
     source-sans-pro
+    work-sans
   ];
 
   fonts.fontconfig = {
@@ -25,11 +19,11 @@
     defaultFonts = {
       emoji = [ "Noto Color Emoji" ];
       monospace = [
-        "Berkeley Mono Variable"
+        "Atkinson Hyperlegible Mono"
         "DejaVu Sans Mono"
       ];
       sansSerif = [
-        "Adwaita Sans"
+        "Work Sans"
         "DejaVu Sans"
       ];
     };
