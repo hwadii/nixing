@@ -6,6 +6,8 @@
 
 (require 'org-macs)
 
+(defvar-keymap wh-map)
+
 (defun wh-insert-date ()
   "Insert a date."
   (interactive)

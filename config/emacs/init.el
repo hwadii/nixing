@@ -129,7 +129,7 @@
   :hook (prog-mode . goto-address-prog-mode))
 (use-package xref
   :ensure nil
-  :init (xref-mouse-mode 1)
+  :config (global-xref-mouse-mode +1)
   :custom
   (xref-search-program 'ripgrep)
   (xref-show-xrefs-function #'consult-xref)
@@ -271,10 +271,7 @@
                '("\\*helpful"
                  (display-buffer-same-window)))
   :bind
-  (:map window-prefix-map
-        ("R" . unbury-buffer)
-        ("t" . transpose-frame)
-        ("r" . rotate-frame))
+  (:map window-prefix-map ("R" . unbury-buffer))
   :custom
   (same-window-buffer-names nil)
   (same-window-regexps nil)
@@ -487,7 +484,6 @@
    '((shell . t)
      (emacs-lisp . t)
      (sql . t)))
-  (add-to-list 'org-src-lang-modes '("deno" . typescript-ts))
   :bind
   ("C-h ." . display-local-help)
   :custom
@@ -915,6 +911,9 @@
   (scroll-margin 0))
 (use-package go-ts-mode
   :ensure nil
+  :config
+  (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
+  (add-to-list 'auto-mode-alist '("/go\\.work\\'" . go-work-ts-mode))
   :custom
   (go-ts-mode-indent-offset 4))
 (use-package nushell-ts-mode
@@ -957,7 +956,9 @@
 (use-package eldoc-box
   :disabled
   :ensure t
-  :hook ((eglot-managed-mode lsp-mode) . eldoc-box-hover-mode)
+  :hook
+  ((eglot-managed-mode lsp-mode) . eldoc-box-hover-mode)
+  (eldoc-box-buffer-setup-hook . eldoc-box-prettify-ts-errors)
   :config
   (set-face-attribute 'eldoc-box-body nil :inherit 'variable-pitch)
   :custom
@@ -1069,9 +1070,7 @@
   :ensure t)
 (use-package typescript-ts-mode
   :ensure nil
-  :mode "\\.mts\\'"
-  :hook
-  (eldoc-box-buffer-setup-hook . eldoc-box-prettify-ts-errors))
+  :mode "\\.mts\\'")
 (use-package ddgr
   :ensure t)
 (use-package tempel

@@ -5,6 +5,8 @@
 ;;; Code:
 
 (require 'embark)
+(require 'ddgr)
+
 (require 'wh-browse)
 
 (defvar-keymap wh-embark-browse-map

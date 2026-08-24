@@ -5,6 +5,7 @@
 ;;; Code:
 
 (require 'project)
+(require 'ghostel)
 
 (use-package sql
   :ensure nil

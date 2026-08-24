@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(defvar-keymap wh-map)
+
 (use-package fontaine
   :ensure t
   :init (fontaine-mode 1)

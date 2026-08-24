@@ -16,6 +16,7 @@
 (defun wh--post-init ()
   "Post-initialization function."
   (setq gc-cons-threshold wh--gc-cons-threshold
+        gc-cons-percentage 0.1
         file-name-handler-alist wh--file-name-handler-alist
         vc-handled-backends wh--vc-handled-backends))
 (add-hook 'after-init-hook #'wh--post-init)
@@ -34,10 +35,8 @@
 
 (setq auto-revert-check-vc-info nil)
 
-(setq inhibit-startup-echo-area-message (user-login-name))
-(setq inhibit-startup-screen t
-      inhibit-startup-echo-area-message user-login-name)
 (setq initial-buffer-choice nil
+      inhibit-startup-screen t
       inhibit-startup-buffer-menu t)
 (setq package-install-upgrade-built-in t)
 
