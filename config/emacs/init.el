@@ -18,8 +18,6 @@
 (setopt indicate-buffer-boundaries 'left)
 (setopt require-final-newline t)
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
 ;; Remove message in scratch buffer.
 (setopt initial-scratch-message nil)
 
@@ -33,11 +31,6 @@
 (setopt tab-width 4)
 
 (setopt enable-recursive-minibuffers t)
-
-;; Keep the cursor out of the read-only portions of the minibuffer
-(setq minibuffer-prompt-properties
-      '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
-(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 (setopt view-read-only t)
 
@@ -61,7 +54,6 @@
 (setopt remote-file-name-inhibit-auto-save-visited t)
 
 (desktop-save-mode 1)
-(setopt user-emacs-directory "~/.config/emacs/")
 
 (setopt nnrss-directory (expand-file-name "news/rss" user-emacs-directory))
 
@@ -100,16 +92,13 @@
 
 (setopt mode-line-right-align-edge 'right-margin)
 
-(global-set-key [remap list-buffers] 'ibuffer)
-(global-set-key [remap dabbrev-expand] 'hippie-expand)
-
-(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-browse.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-insert.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-eshell-prompt.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-fonts.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-lsp.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-tenderbolt.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "lisp/wh-embark-browse.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-browse.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-insert.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-eshell-prompt.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-fonts.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-lsp.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-tenderbolt.el"))
+(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-embark-browse.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "early-init.el"))
 
 (defvar-keymap wh-notes-map
@@ -135,13 +124,14 @@
   (imenu-auto-rescan t)
   (imenu-max-item-length 160))
 (use-package goto-addr
+  :ensure nil
   :commands (goto-address-mode)
   :hook (prog-mode . goto-address-prog-mode))
 (use-package xref
   :ensure nil
+  :init (xref-mouse-mode 1)
   :custom
   (xref-search-program 'ripgrep)
-  ;; Use Consult to select xref locations with preview
   (xref-show-xrefs-function #'consult-xref)
   (xref-show-definitions-function #'consult-xref))
 (use-package display-fill-column-indicator
@@ -158,8 +148,8 @@
    'remote-direct-async-process)
   :custom
   (tramp-use-scp-direct-remote-copying t)
-  (tramp-copy-size-limit (* 1024 1024) ;; 1MB
-  (tramp-verbose 2)))
+  (tramp-copy-size-limit (* 1024 1024)) ;; 1MB
+  (tramp-verbose 2))
 (use-package isearch
   :ensure nil
   :custom
@@ -183,8 +173,7 @@
   (minions-mode)
   :custom
   (minions-mode-line-lighter "…")
-  (minions-prominent-modes '(flymake-mode lsp-mode))
-  (force-mode-line-update t))
+  (minions-prominent-modes '(flymake-mode lsp-mode)))
 (use-package dired
   :ensure nil
   :bind (:map dired-mode-map
@@ -290,10 +279,6 @@
   (same-window-buffer-names nil)
   (same-window-regexps nil)
   (switch-to-buffer-obey-display-actions t))
-(use-package man
-  :ensure nil
-  :custom
-  (Man-notify-method 'pushy))
 (use-package repeat
   :ensure nil
   :hook (after-init . repeat-mode))
@@ -302,14 +287,6 @@
   :init (minibuffer-depth-indicate-mode 1))
 (use-package emacs
   :init
-  (when (< emacs-major-version 31)
-    (advice-add
-     #'completing-read-multiple :filter-args
-     (lambda (args)
-       (cons (format "[CRM%s] %s"
-                     (string-replace "[ \t]*" "" crm-separator)
-                     (car args))
-             (cdr args)))))
   (setq minibuffer-prompt-properties
         '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
@@ -398,7 +375,7 @@
   (history-length 1000)
   (history-delete-duplicates t)
   (savehist-save-minibuffer-history t)
-  (savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
+  (savehist-additional-variables nil)
   :init
   (savehist-mode 1))
 (use-package undo-fu-session
@@ -407,6 +384,8 @@
 (use-package minibuffer
   :ensure nil
   :custom
+  (read-file-name-completion-ignore-case t)
+  (read-buffer-completion-ignore-case t)
   (completion-cycle-threshold nil)
   (completion-ignore-case t)
   (completion-styles '(orderless basic))
@@ -421,14 +400,11 @@
         ("DEL" . vertico-directory-delete-char)
         ("M-DEL" . vertico-directory-delete-word))
   :init
-  (setopt read-file-name-completion-ignore-case t
-          read-buffer-completion-ignore-case t)
   (vertico-mode +1)
   (vertico-mouse-mode -1))
 (use-package vertico-directory
   :ensure nil
-  :after vertico
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+  :after vertico)
 (use-package vertico-repeat
   :after vertico
   :ensure nil
@@ -455,14 +431,6 @@
   :custom
   (markdown-command "pandoc")
   (markdown-fontify-code-blocks-natively nil))
-(use-package markdown-ts-mode
-  :ensure t
-  :disabled
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
-  (add-to-list 'treesit-language-source-alist
-               '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
 (use-package rainbow-delimiters
   :ensure t
   :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode lisp-mode) . rainbow-delimiters-mode))
@@ -501,6 +469,7 @@
   :pin melpa
   :ensure t)
 (use-package doc-view
+  :ensure nil
   :custom
   (doc-view-resolution 300))
 (use-package pdf-tools
@@ -512,14 +481,12 @@
   :pin gnu
   :init
   (require 'ox-md)
-  (require 'ob-deno)
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell . t)
      (emacs-lisp . t)
-     (sql . t)
-     (deno . t)))
+     (sql . t)))
   (add-to-list 'org-src-lang-modes '("deno" . typescript-ts))
   :bind
   ("C-h ." . display-local-help)
@@ -575,24 +542,12 @@
   :custom
   (shr-use-colors nil)
   (shr-use-fonts nil))
-(use-package tree-sitter-langs ;; grammar bundle
-  :ensure t
-  :custom (global-tree-sitter-mode t))
-(use-package treesit-auto ;; auto-install missing grammars
-  :ensure t
-  :config (global-treesit-auto-mode))
-(use-package treesit-fold ;; enable code folding based on tree-sitter
-  :ensure t
-  :config (treesit-fold-mode)
-  :bind
-  ("C-`" . treesit-fold-toggle))
-(use-package xml-mode
+(use-package treesit
   :ensure nil
-  :mode "\\.csproj\\'")
+  :custom
+  (treesit-enabled-modes t)
+  (treesit-auto-install-grammar 'ask))
 (use-package rust-mode :ensure t)
-(use-package typescript-mode
-  :ensure t
-  :hook (typescript-mode . (lambda () (setq fill-column 120))))
 (use-package json-mode :ensure t)
 (use-package zig-mode :ensure t)
 (use-package zig-ts-mode
@@ -608,17 +563,6 @@
   (ruby-method-params-indent nil)
   (ruby-bracketed-args-indent nil)
   (ruby-flymake-use-rubocop-if-available t))
-(use-package ruby-ts-mode
-  :ensure nil
-  :mode "\\.rb\\'"
-  :mode "Rakefile\\'"
-  :mode "Gemfile\\'")
-(use-package csharp-ts-mode
-  :ensure nil
-  :mode "\\.cs\\'")
-(use-package python-ts-mode
-  :ensure nil
-  :mode "\\.py\\'")
 (use-package scala-ts-mode
   :ensure t
   :mode "\\.scala'")
@@ -699,6 +643,7 @@
   (which-key-idle-secondary-delay 0.05)
   :config (which-key-mode))
 (use-package ansi-color
+  :ensure nil
   :hook (compilation-filter . ansi-color-compilation-filter)
   :config
   (defun wh-ansi-apply-color-on-buffer ()
@@ -838,7 +783,6 @@
 (use-package no-littering
   :ensure t
   :config
-  ;; Write customizations to a separate file instead of this file.
   (setopt custom-file (no-littering-expand-etc-file-name "custom.el")))
 (use-package helpful
   :ensure t
@@ -889,12 +833,6 @@
 (use-package so-long
   :ensure nil
   :config (global-so-long-mode))
-(use-package auto-compile
-  :ensure t
-  :config (auto-compile-on-load-mode)
-  :custom
-  (auto-compile-display-buffer nil)
-  (auto-compile-mode-line-counter t))
 (use-package avy
   :ensure t
   :config
@@ -975,12 +913,8 @@
   :custom
   (scroll-conservatively 3)
   (scroll-margin 0))
-(use-package yaml-ts-mode
-  :ensure nil
-  :mode "\\.ya?ml\\'")
 (use-package go-ts-mode
   :ensure nil
-  :mode "\\.go\\'"
   :custom
   (go-ts-mode-indent-offset 4))
 (use-package nushell-ts-mode
@@ -1021,6 +955,7 @@
   (gnus-permanently-visible-groups "INBOX\\|Sent\\|Archive")
   (message-send-mail-function #'smtpmail-send-it))
 (use-package eldoc-box
+  :disabled
   :ensure t
   :hook ((eglot-managed-mode lsp-mode) . eldoc-box-hover-mode)
   :config
@@ -1096,7 +1031,8 @@
 (use-package man
   :ensure nil
   :custom
-  (Man-switches "-a"))
+  (Man-switches "-a")
+  (Man-notify-method 'pushy))
 (use-package stillness-mode
   :ensure t
   :init (stillness-mode))
@@ -1133,11 +1069,9 @@
   :ensure t)
 (use-package typescript-ts-mode
   :ensure nil
+  :mode "\\.mts\\'"
   :hook
-  (eldoc-box-buffer-setup-hook . eldoc-box-prettify-ts-errors)
-  :mode
-  ("\\.tsx$" . tsx-ts-mode)
-  ("\\.mts$" . typescript-ts-mode))
+  (eldoc-box-buffer-setup-hook . eldoc-box-prettify-ts-errors))
 (use-package ddgr
   :ensure t)
 (use-package tempel

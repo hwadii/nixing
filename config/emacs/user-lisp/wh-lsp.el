@@ -45,8 +45,6 @@
 (use-package lsp-mode
   :ensure t
   :diminish (lsp-mode . "LSP")
-  :init
-  (setq lsp--show-message nil)
   :custom
   (lsp-eldoc-render-all t)
   (lsp-headerline-breadcrumb-enable nil)

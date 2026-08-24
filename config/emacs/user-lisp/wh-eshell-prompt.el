@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(require 'modus-themes)
+
 (defun wh-eshell-prompt-fn ()
   "Eshell prompt with colors from the current (modus-themes based) enabled theme."
   (modus-themes-with-colors

@@ -4,3 +4,7 @@ result-*
 
 # Ignore automatically generated direnv output
 .direnv
+
+*.elc
+*.swp
+/config/emacs/user-lisp/.user-lisp-autoloads.el
