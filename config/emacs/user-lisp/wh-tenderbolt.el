@@ -14,7 +14,8 @@
   "Compile the Tenderbolt frontend with the correct `default-directory'."
   (interactive)
   (let* ((root (project-root (project-current t)))
-        (default-directory (file-name-concat root "frontend")))
+        (default-directory (file-name-concat root "frontend"))
+        (compilation-buffer-name-function (lambda (_) "*tenderbolt: tsc*")))
     (compile "mise run compile")))
 
 ;;;###autoload
@@ -25,7 +26,8 @@ If ARG is given, then prompt with `completing-read' for a file."
   (let* ((pr (project-current t))
          (root (project-root pr))
          (files (project-files pr))
-         (default-directory (file-name-concat root "frontend")))
+         (default-directory (file-name-concat root "frontend"))
+         (compilation-buffer-name-function (lambda (_) "*tenderbolt: vitest*")))
     (compile (if arg
                  (format "yarn test --run %s"
                          (shell-quote-argument
@@ -48,7 +50,7 @@ If ARG is passed, create a new buffer."
   (interactive "P")
   (let* ((proj (project-current t))
          (default-directory (project-root proj))
-         (name "*claude: tenderbolt*")
+         (name "*robot: tenderbolt*")
          (existing (get-buffer name)))
     (if (and existing (not arg))
         (pop-to-buffer-same-window existing)
