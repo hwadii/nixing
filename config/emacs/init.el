@@ -38,17 +38,6 @@
 
 (setopt view-read-only t)
 
-;; Indentation setting for various languages.
-(setopt c-basic-offset 4)
-(setopt js-indent-level 2)
-(setopt typescript-indent-level 2)
-(setopt css-indent-offset 2)
-
-;; Write auto-saves and backups to separate directory.
-(make-directory "~/.tmp/emacs/auto-save/" t)
-(setopt auto-save-file-name-transforms '((".*" "~/.tmp/emacs/auto-save/" t)))
-(setopt backup-directory-alist '(("." . "~/.tmp/emacs/backup/")))
-
 ;; Do not move the current file while creating backup.
 (setopt backup-by-copying t)
 
@@ -405,9 +394,6 @@
   :init
   (vertico-mode +1)
   (vertico-mouse-mode -1))
-(use-package vertico-directory
-  :ensure nil
-  :after vertico)
 (use-package vertico-repeat
   :after vertico
   :ensure nil
@@ -423,6 +409,7 @@
   :ensure nil
   :custom
   (ffap-machine-p-known 'reject)
+  (ffap-prefer-remote-file t)
   :config
   (advice-add #'ffap-menu-ask :around
               (lambda (&rest args)
@@ -466,7 +453,6 @@
   :ensure t
   :after magit
   :custom
-  (forge-database-file "~/.config/forge/database.sqlite")
   (forge-owned-accounts '(("hwadii"))))
 (use-package transient
   :pin melpa
@@ -490,8 +476,6 @@
    '((shell . t)
      (emacs-lisp . t)
      (sql . t)))
-  :bind
-  ("C-h ." . display-local-help)
   :custom
   (org-hide-emphasis-markers nil)
   :hook
@@ -499,7 +483,6 @@
 (use-package org-modern
   :ensure t
   :custom
-  (org-modern-checkbox nil)
   (org-modern-star 'fold)
   :hook
   (org-mode . org-modern-mode)
@@ -524,7 +507,7 @@
   :config (global-diff-hl-mode)
   :custom
   (diff-hl-flydiff-mode t)
-  (diff-hl-draw-borders nil)
+  (diff-hl-draw-borders t)
   (diff-hl-show-staged-changes nil))
 (use-package ediff
   :ensure nil
@@ -575,11 +558,7 @@
 (use-package apheleia
   :ensure t
   :config
-  (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff-isort ruff))
-  (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff-isort ruff))
   (add-to-list 'apheleia-formatters '(csharpier "dotnet" "csharpier" "--write-stdout"))
-  (add-to-list 'apheleia-formatters '(typescript-ts-mode "biome"))
-  (add-to-list 'apheleia-formatters '(tsx-ts-mode "biome"))
   :bind ("C-c l f" . apheleia-format-buffer))
 (use-package remember
   :ensure nil
@@ -1056,11 +1035,15 @@
   :pin gnu)
 (use-package htmlize
   :ensure t)
+(use-package css-mode
+  :ensure nil
+  :custom
+  (css-indent-offset 2))
 (use-package typst-ts-mode
   :ensure t)
 (use-package typescript-ts-mode
   :ensure nil
-  :mode "\\.mts\\'")
+  :mode ("\\.[cm]ts\\'" . typescript-ts-mode-maybe))
 (use-package ddgr
   :ensure t)
 (use-package tempel
@@ -1072,8 +1055,10 @@
   (sql-postgres-login-params '(user password server database port)))
 (use-package js
   :ensure nil
+  :custom
+  (js-indent-level 2)
   :mode
-  ("\\.mjs$" . js-ts-mode))
+  ("\\.[cm]js$" . javascript-mode))
 (use-package fontaine
   :ensure t
   :init (fontaine-mode 1)
