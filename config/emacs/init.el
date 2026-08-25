@@ -4,6 +4,10 @@
 
 ;;; Code:
 
+;; Local variables:
+;; outline-minor-mode: t
+;; End:
+
 (column-number-mode 1)
 (line-number-mode 1)
 (tool-bar-mode -1)
@@ -95,24 +99,24 @@
 (add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-browse.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-insert.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-eshell-prompt.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-fonts.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-lsp.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-tenderbolt.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-embark-browse.el"))
 (add-to-list 'trusted-content (concat user-emacs-directory "early-init.el"))
 
 (defvar-keymap wh-notes-map
-  :doc "Keymap for my notes commands."
-  :prefix #'wh-notes-prefix-map)
+  :doc "Keymap for my notes commands.")
 (defvar-keymap wh-map
   :doc "Keymap for my commands."
-  :prefix #'wh-prefix-map
-  "r" wh-notes-map)
+  "r" wh-notes-map
+  "d" #'wh-insert-date)
 
 (require 'package)
 (unless package-archive-contents
   (package-refresh-contents))
 
+(use-package no-littering
+  :ensure t
+  :custom
+  (custom-file (no-littering-expand-etc-file-name "custom.el")))
 (use-package find-file
   :ensure nil
   :custom
@@ -498,6 +502,10 @@
   :hook
   (org-mode . org-modern-mode)
   (org-agenda-finalize-hook . org-modern-agenda))
+(use-package outline
+  :ensure nil
+  :custom
+  (outline-minor-mode-cycle t))
 (use-package verb
   :ensure t
   :after org
@@ -696,29 +704,6 @@
           (buffer-string))
       (apply orig-fun args)))
   (advice-add #'eshell/cat :around #'adviced:eshell/cat)
-  (defun wh-pwd-replace-home (pwd)
-    "Replace home in PWD with tilde (~) character."
-    (let* ((home (expand-file-name (getenv "HOME")))
-           (home-len (length home)))
-      (if (and
-           (>= (length pwd) home-len)
-           (equal home (substring pwd 0 home-len)))
-          (concat "~" (substring pwd home-len))
-        pwd)))
-  (defun wh-pwd-shorten-dirs (pwd n)
-    "Shorten all directory names in PWD except the last N."
-    (let ((p-lst (split-string pwd "/")))
-      (if (> (length p-lst) n)
-          (concat
-           (mapconcat (lambda (elm) (if (zerop (length elm)) ""
-                                      (substring elm 0 1)))
-                      (butlast p-lst n)
-                      "/")
-           "/"
-           (mapconcat (lambda (elm) elm)
-                      (last p-lst n)
-                      "/"))
-        pwd)))  ;; Otherwise, we just return the PWD
   :custom
   (eshell-prefer-lisp-functions t)
   (eshell-scroll-to-bottom-on-output nil)
@@ -776,10 +761,6 @@
   :if (not (eq system-type 'darwin))
   :init (envrc-global-mode)
   :bind ("C-c e" . envrc-command-map))
-(use-package no-littering
-  :ensure t
-  :config
-  (setopt custom-file (no-littering-expand-etc-file-name "custom.el")))
 (use-package helpful
   :ensure t
   :bind (([remap describe-command] . helpful-command)
@@ -801,6 +782,14 @@
   (define-key global-map (kbd "C-c n") operate-on-number-repeat-map))
 (use-package embark
   :ensure t
+  :config
+  (defvar-keymap wh-embark-browse-map
+    :doc "Keymap for Web search commands"
+    :parent nil
+    "d" #'browse-ddg
+    "s" #'ddgr-search)
+  (fset 'wh-embark-browse-map wh-embark-browse-map)
+  (keymap-set embark-general-map "S" 'wh-embark-browse-map)
   :bind
   ("C-." . embark-act)
   ("C-;" . embark-dwim)
@@ -1084,18 +1073,128 @@
   :ensure nil
   :mode
   ("\\.mjs$" . js-ts-mode))
+(use-package fontaine
+  :ensure t
+  :init (fontaine-mode 1)
+  :config (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
+  :bind (:map wh-map ("f" . fontaine-set-preset))
+  :custom
+  (fontaine-presets
+   '((regular
+      :default-family "Source Code Pro"
+      :default-height 160
+      :default-weight regular
+      :default-width normal
+      :fixed-pitch-family "Source Code Pro"
+      :fixed-pitch-weight regular
+      :variable-pitch-family "Work Sans"
+      :variable-pitch-height 150))))
+(set-fontset-font t nil "DejaVu Sans Mono" nil 'append)
+(set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
+(set-fontset-font t nil "Symbols Nerd Font" nil 'append)
+
+;;; LSP
+(use-package eglot
+  :ensure t
+  :custom
+  (eglot-autoshutdown t)
+  (eglot-autoreconnect t)
+  (eglot-sync-connect 1)
+  (eglot-events-buffer-config :size 0)
+  (eglot-confirm-server-edits nil)
+  (eglot-extend-to-xref t)
+  (eglot-connection-timeout 60)
+  (eglot-code-action-indications '(eldoc-hint))
+  (eglot-ignored-server-capabilities '(:semanticTokensProvider))
+  :bind
+  ("C-c l c" . eglot-reconnect)
+  ("C-c l l" . eglot)
+  ("C-c l r" . eglot-rename)
+  ("C-c l s" . eglot-shutdown)
+  ("C-c l h" . eglot-inlay-hints-mode)
+  ("C-c l i" . eglot-find-implementation)
+  ("C-c l a" . eglot-code-actions)
+  ("C-c l o" . eglot-code-action-organize-imports)
+  ("C-c l m" . flymake-show-buffer-diagnostics)
+  ("C-c l x" . eglot-reconnect)
+  :config
+  (add-to-list 'eglot-server-programs '((ruby-mode ruby-ts-mode) . ("ruby-lsp")))
+  (add-to-list 'eglot-server-programs '(scala-ts-mode . ("metals")) t)
+  (add-to-list 'eglot-server-programs '(zig-ts-mode . ("zls")) t)
+  (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")) t)
+  (add-to-list 'eglot-server-programs '((tsx-mode tsx-ts-mode) . ("tailwindcss-language-server" "--stdio")) t)
+  :hook
+  (eglot-managed-mode . (lambda () (eglot-inlay-hints-mode -1)))
+  ((typescript-mode typescript-ts-mode tsx-ts-mode) . eglot-ensure))
+
+(use-package breadcrumb
+  :ensure t
+  :bind
+  ("C-c l b" . breadcrumb-local-mode))
+
+(use-package lsp-mode
+  :ensure t
+  :diminish (lsp-mode . "LSP")
+  :custom
+  (lsp-eldoc-render-all t)
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-modeline-code-actions-enable nil)
+  (lsp-modeline-diagnostics-enable nil)
+  (lsp-enable-snippet nil)
+  (lsp-enable-suggest-server-download nil)
+  (lsp-auto-guess-root t)
+  (lsp-progress-prefix nil)
+  (lsp-disabled-clients '(ruby-ls rubocop-ls angular-ls tailwindcss))
+  (lsp-enable-indentation nil)
+  :hook
+  (lsp-mode . lsp-enable-which-key-integration))
+
+(use-package flymake
+  :ensure nil
+  :hook (prog-mode . flymake-mode)
+  :config
+  (defvar-keymap flymake-goto-repeat-map
+    :repeat t
+    "n" #'flymake-goto-next-error
+    "p" #'flymake-goto-prev-error)
+  :bind
+  (:map flymake-mode-map
+        ("C-c ! n" . flymake-goto-next-error)
+        ("C-c ! p" . flymake-goto-prev-error))
+  :custom
+  (flymake-show-diagnostics-at-end-of-line nil)
+  (flymake-no-changes-timeout 0.5))
+
+;;; Tenderbolt
+(when (string-equal (system-name) 'silverwing)
+  (use-package sql
+    :ensure nil
+    :config
+    (add-to-list 'sql-connection-alist '("tenderbolt-dev"
+                                         (sql-product 'postgres)
+                                         (sql-server "127.0.0.1")
+                                         (sql-port 54322)
+                                         (sql-user "postgres")
+                                         (sql-password "postgres")
+                                         (sql-database "postgres")))
+    (add-to-list 'sql-connection-alist '("tenderbolt-test"
+                                         (sql-product 'postgres)
+                                         (sql-server "127.0.0.1")
+                                         (sql-port 5432)
+                                         (sql-user "postgres")
+                                         (sql-password "postgres")
+                                         (sql-database "postgres"))))
+  (use-package mise
+    :commands (global-mise-mode mise-update-dir)
+    :ensure t
+    :config (global-mise-mode))
+  (use-package magit
+    :config
+    (add-to-list 'magit-repository-directories '("~/dev/tenderbolt" . 1))))
 
 (setopt disabled-command-function nil)
 
 (load custom-file t)
-(require 'wh-browse)
-(require 'wh-insert)
-(require 'wh-eshell-prompt)
-(require 'wh-lsp)
-(require 'wh-fonts)
-(when (string-equal (system-name) "silverwing")
-  (require 'wh-tenderbolt))
-(require 'wh-embark-browse)
 
 (provide 'init)
 
