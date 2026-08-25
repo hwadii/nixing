@@ -58,11 +58,26 @@ If ARG is passed, create a new buffer."
         (ghostel-exec buf "claude")
         (pop-to-buffer-same-window buf)))))
 
+;;;###autoload
+(defun tenderbolt-run-shell ()
+  "Run a Django shell session within Tenderbolt.
+If a session already exists, pop to its buffer."
+  (interactive)
+  (let* ((proj (project-current t))
+         (default-directory (project-root proj))
+         (name "*shell: tenderbolt*")
+         (existing (get-buffer name)))
+    (unless existing
+      (let ((buf (get-buffer-create name)))
+        (ghostel-exec buf "make" '("shell"))))
+    (pop-to-buffer-same-window name)))
+
 (defvar-keymap tenderbolt-command-map
   :doc "Tenderbolt commands."
   "c" #'tenderbolt-compile-frontend
   "r" #'tenderbolt-run-frontend
   "b" #'tenderbolt-run-robot
+  "s" #'tenderbolt-run-shell
   "t" #'tenderbolt-test-frontend)
 
 (defvar-keymap tenderbolt-mode-map
