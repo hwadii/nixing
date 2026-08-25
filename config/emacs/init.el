@@ -578,10 +578,9 @@
   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff-isort ruff))
   (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff-isort ruff))
   (add-to-list 'apheleia-formatters '(csharpier "dotnet" "csharpier" "--write-stdout"))
+  (add-to-list 'apheleia-formatters '(typescript-ts-mode "biome"))
+  (add-to-list 'apheleia-formatters '(tsx-ts-mode "biome"))
   :bind ("C-c l f" . apheleia-format-buffer))
-(use-package csharp-mode
-  :ensure nil
-  :hook ((csharp-mode csharp-ts-mode) . (lambda () (setq fill-column 120))))
 (use-package remember
   :ensure nil
   :config
@@ -1108,6 +1107,7 @@
   (eglot-connection-timeout 60)
   (eglot-code-action-indications '(eldoc-hint))
   (eglot-ignored-server-capabilities '(:semanticTokensProvider))
+  (eglot-documentation-renderer #'markdown-ts-view-mode)
   :bind
   ("C-c l c" . eglot-reconnect)
   ("C-c l l" . eglot)
