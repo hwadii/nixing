@@ -15,7 +15,6 @@
   :group 'browse-streams
   :type '(repeat string))
 
-;;;###autoload
 (defun browse-url-video-player (url &optional timecode)
   "Browse URL in appropriate video player at the given TIMECODE."
   (let ((start (if timecode timecode "0")))

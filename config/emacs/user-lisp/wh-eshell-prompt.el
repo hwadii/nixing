@@ -6,7 +6,6 @@
 
 (require 'modus-themes)
 
-;;;###autoload
 (defun wh-pwd-replace-home (pwd)
   "Replace home in PWD with tilde (~) character."
   (let* ((home (expand-file-name (getenv "HOME")))
@@ -17,7 +16,6 @@
         (concat "~" (substring pwd home-len))
       pwd)))
 
-;;;###autoload
 (defun wh-pwd-shorten-dirs (pwd n)
   "Shorten all directory names in PWD except the last N."
   (let ((p-lst (split-string pwd "/")))
