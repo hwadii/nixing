@@ -358,8 +358,10 @@
 (use-package project
   :ensure nil
   :bind
+  (:map project-prefix-map ("C-f" . project-root-find-file))
   :custom
   (project-vc-extra-root-markers '(".project"))
+  (project-list-exclude '("~/dev/sources/scratch/*"))
   (project-switch-commands '((project-find-file "Find" ?f)
                              (project-find-dir "Directory" ?d)
                              (consult-ripgrep "Ripgrep" ?r)
@@ -1133,6 +1135,7 @@
   ("C-c l b" . breadcrumb-local-mode))
 
 (use-package lsp-mode
+  :disabled
   :ensure t
   :diminish (lsp-mode . "LSP")
   :custom
