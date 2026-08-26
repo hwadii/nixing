@@ -106,10 +106,20 @@
   :ensure t
   :custom
   (custom-file (no-littering-expand-etc-file-name "custom.el")))
+(use-package package
+  :ensure nil
+  :custom
+  (package-autosuggest-mode t)
+  (package-menu-use-current-if-no-marks nil))
 (use-package find-file
   :ensure nil
   :custom
-  (find-file-visit-truename t)
+  (find-file-visit-truename t))
+(use-package vc
+  :ensure nil
+  :custom
+  (vc-use-incoming-outgoing-prefixes t)
+  (vc-deduce-backend-nonvc-modes t)
   (vc-follow-symlinks t))
 (use-package imenu
   :ensure nil
@@ -312,7 +322,9 @@
   (kill-do-not-save-duplicates t)
   (mouse-yank-at-point t)
   (compilation-max-output-line-length nil)
-  (yank-excluded-properties t))
+  (yank-excluded-properties t)
+  (exchange-point-and-mark-highlight-region t)
+  (shell-command-prompt-show-cwd t))
 (use-package autorevert
   :ensure nil
   :config
@@ -633,6 +645,10 @@
   (defun wh-ansi-apply-color-on-buffer ()
     (interactive)
     (ansi-color-apply-on-region (point-min) (point-max) 'replace)))
+(use-package compile
+  :ensure nil
+  :custom
+  (compilation-scroll-output 'first-error))
 (use-package fish-mode
   :ensure t)
 (use-package jinx
@@ -865,7 +881,11 @@
   :after (embark consult))
 (use-package mouse
   :ensure nil
-  :config (context-menu-mode))
+  :config (context-menu-mode)
+  :custom
+  (mouse-drag-mode-line-buffer t)
+  (mouse-drag-and-drop-region t)
+  (mouse-drag-and-drop-region-cross-program t))
 (use-package mwheel
   :ensure nil
   :custom
