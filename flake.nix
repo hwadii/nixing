@@ -1,8 +1,9 @@
 {
-  description = "NixOS configuration";
+  description = "Wadii's NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgs.url = "nixpkgs/nixos-26.05";
+    nixpkgs-unstable.url = "nixpkgs/nixos-unstable-small";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,13 +21,18 @@
   outputs =
     inputs@{
       nixpkgs,
+      nixpkgs-unstable,
       home-manager,
       disko,
       ...
     }:
+    let
+      system = "x86_64-linux";
+      pkgs-unstable = import nixpkgs-unstable { inherit system; };
+    in
     {
       nixosConfigurations.caraxes = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/caraxes/configuration.nix
@@ -40,12 +46,13 @@
                 inputs.noctalia.homeModules.default
               ];
             };
+            home-manager.extraSpecialArgs = { inherit pkgs-unstable; };
           }
         ];
       };
 
       nixosConfigurations.balerion = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
         specialArgs = { inherit inputs; };
         modules = [
           disko.nixosModules.disko

@@ -1,32 +1,17 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 
 {
   home.packages = [ pkgs.imagemagick ];
 
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs-pgtk;
+    package = pkgs-unstable.emacs31-pgtk;
     extraPackages = epkgs: [
-      epkgs.vterm
       epkgs.jinx
       epkgs.pdf-tools
       epkgs.tree-sitter-langs
-      (epkgs.treesit-grammars.with-grammars (grammars: [
-        grammars.tree-sitter-nix
-        grammars.tree-sitter-nu
-        grammars.tree-sitter-bash
-        grammars.tree-sitter-css
-        grammars.tree-sitter-c
-        grammars.tree-sitter-cpp
-        grammars.tree-sitter-toml
-        grammars.tree-sitter-typst
-        grammars.tree-sitter-scala
-        grammars.tree-sitter-rust
-        grammars.tree-sitter-yaml
-        grammars.tree-sitter-go
-        grammars.tree-sitter-kdl
-        grammars.tree-sitter-python
-      ]))
+      epkgs.ghostel
+      epkgs.treesit-grammars.with-all-grammars
     ];
   };
 

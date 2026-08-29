@@ -44,17 +44,29 @@
     "nixpkgs": {
       "locked": {
         "lastModified": 1787848966,
-        "narHash": "sha256-7gDpu5hpq0rOYnYMcOWqSzquK4HA/xU8Xf3CjUBOOJA=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
+        "narHash": "sha256-pbm8BrmtI4lOXt2syJ3FP12LjybYuiTdUO0GQrbQMk0=",
         "rev": "d57af924f160a5084293c71c2043f058bd1cdb60",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.8538.d57af924f160/nixexprs.tar.xz"
       },
       "original": {
-        "owner": "NixOS",
+        "id": "nixpkgs",
         "ref": "nixos-26.05",
-        "repo": "nixpkgs",
-        "type": "github"
+        "type": "indirect"
+      }
+    },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1787960808,
+        "narHash": "sha256-P5m+UjpoOJzfUUH494ylEYiOwOBCWQpf5i+E8le3Bh0=",
+        "rev": "b0aa699cd56b87a41d3e66d89f827c7fbc35ed8d",
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1063752.b0aa699cd56b/nixexprs.tar.xz"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "ref": "nixos-unstable-small",
+        "type": "indirect"
       }
     },
     "noctalia": {
@@ -107,6 +119,7 @@
         "disko": "disko",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-unstable": "nixpkgs-unstable",
         "noctalia": "noctalia"
       }
     },
