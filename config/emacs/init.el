@@ -50,7 +50,7 @@
 
 (setopt nnrss-directory (expand-file-name "news/rss" user-emacs-directory))
 
-(setopt shell-file-name (if (eq system-type 'darwin) "/opt/homebrew/bin/fish" "fish"))
+(setopt shell-file-name "bash")
 (setopt explicit-shell-file-name "bash")
 
 (setq-default bidi-display-reordering 'left-to-right
@@ -739,7 +739,7 @@
 (use-package envrc
   :ensure t
   :if (not (eq system-type 'darwin))
-  :init (envrc-global-mode)
+  :hook (after-init . envrc-global-mode)
   :bind ("C-c e" . envrc-command-map))
 (use-package helpful
   :ensure t
