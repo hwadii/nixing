@@ -16,7 +16,7 @@
   (let* ((root (project-root (project-current t)))
         (default-directory (file-name-concat root "frontend"))
         (compilation-buffer-name-function (lambda (_) "*tenderbolt: tsc*")))
-    (compile "mise run compile")))
+    (compile "yarn typecheck")))
 
 ;;;###autoload
 (defun tenderbolt-test-frontend (&optional arg)

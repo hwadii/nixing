@@ -105,7 +105,9 @@
 (use-package no-littering
   :ensure t
   :custom
-  (custom-file (no-littering-expand-etc-file-name "custom.el")))
+  (custom-file (no-littering-expand-etc-file-name "custom.el"))
+  :config
+  (no-littering-theme-backups))
 (use-package package
   :ensure nil
   :custom
@@ -276,8 +278,7 @@
   :bind
   (:map window-prefix-map ("R" . unbury-buffer))
   :custom
-  (same-window-buffer-names nil)
-  (same-window-regexps nil)
+  (quit-restore-window-no-switch t)
   (switch-to-buffer-obey-display-actions t))
 (use-package repeat
   :ensure nil
@@ -323,7 +324,7 @@
   (mouse-yank-at-point t)
   (compilation-max-output-line-length nil)
   (yank-excluded-properties t)
-  (exchange-point-and-mark-highlight-region t)
+  (exchange-point-and-mark-highlight-region nil)
   (shell-command-prompt-show-cwd t))
 (use-package autorevert
   :ensure nil
@@ -460,12 +461,15 @@
   (magit-diff-specify-hunk-foreground t)
   (magit-diff-use-indicator-faces t)
   (magit-delete-by-moving-to-trash nil)
-  (magit-branch-name-suggestions '("wh/")))
+  (magit-branch-name-suggestions '("wh/"))
+  (magit-prefer-remote-upstream t))
 (use-package forge
   :ensure t
   :after magit
   :custom
   (forge-owned-accounts '(("hwadii"))))
+(use-package git-modes
+  :ensure t)
 (use-package transient
   :pin melpa
   :ensure t)
@@ -678,6 +682,24 @@
   (eshell-mode . goto-address-mode)
   :config
   (defalias 'eshell/v 'eshell/ghostel)
+  (defun wh-eshell-send-input-under-ghostel ()
+    "Send the current Eshell input, running it under ghostel.
+Prefixes the input with the `ghostel' built-in so full-screen
+programs get a real terminal.  With point on old input, that input
+is reused."
+    (interactive)
+    (let ((input (string-trim
+                  (if (< (point) eshell-last-output-end)
+                      (eshell-get-old-input)
+                    (buffer-substring-no-properties
+                     eshell-last-output-end (point-max))))))
+      (goto-char (point-max))
+      (delete-region eshell-last-output-end (point-max))
+      (unless (or (string-empty-p input)
+                  (string-match-p "\\`\\(?:v\\|ghostel\\)\\(?:[[:space:]]\\|\\'\\)" input))
+        (setq input (concat "ghostel " input)))
+      (insert input))
+    (eshell-send-input))
   (defun adviced:eshell/cat (orig-fun &rest args)
     "Like `eshell/cat' but with image support."
     (if (seq-every-p (lambda (arg)
@@ -712,6 +734,11 @@
   (eshell-prompt-function #'wh-eshell-prompt-fn)
   (eshell-visual-subcommands '(("kubectl" "exec") ("tsh" "ssh")))
   (eshell-visual-commands '("nvim" "tmux" "top" "htop" "less" "newsboat" "nu")))
+(use-package esh-mode
+  :ensure nil
+  :after eshell
+  :bind (:map eshell-mode-map
+              ("C-<return>" . wh-eshell-send-input-under-ghostel)))
 (use-package em-hist
   :ensure nil
   :after consult
@@ -734,11 +761,11 @@
 (use-package casual
   :ensure t
   :init (casual-init)
+  :bind (:map dired-mode-map ("s" . casual-dired-sort-by-tmenu))
   :custom
   (casual-init-hook
    '(casual-agenda-init casual-calc-init casual-calendar-init
-                        casual-dired-init casual-eshell-init
-                        casual-eww-init casual-help-init
+                        casual-eshell-init casual-eww-init
                         casual-ibuffer-init casual-image-init
                         casual-info-init casual-compile-init
                         casual-man-init casual-org-init casual-re-builder-init))
@@ -1078,7 +1105,7 @@
   :custom
   (js-indent-level 2)
   :mode
-  ("\\.[cm]js$" . javascript-mode))
+  ("\\.[cm]js\\'" . javascript-mode))
 (use-package fontaine
   :ensure t
   :init (fontaine-mode 1)
@@ -1087,11 +1114,12 @@
   :custom
   (fontaine-presets
    '((regular
-      :default-family "Source Code Pro"
-      :default-height 160
+      :default-family "PragmataPro Mono"
+      :default-height 150
       :default-weight regular
       :default-width normal
-      :fixed-pitch-family "Source Code Pro"
+      :line-spacing (1 . 1)
+      :fixed-pitch-family "PragmataPro Mono"
       :fixed-pitch-weight regular
       :variable-pitch-family "Work Sans"
       :variable-pitch-height 150))))
@@ -1105,13 +1133,12 @@
   :custom
   (eglot-autoshutdown t)
   (eglot-autoreconnect t)
-  (eglot-sync-connect 1)
-  (eglot-events-buffer-config :size 0)
+  (eglot-sync-connect nil)
+  (eglot-events-buffer-config '(:size 0 :format short))
   (eglot-confirm-server-edits nil)
   (eglot-extend-to-xref t)
   (eglot-connection-timeout 60)
   (eglot-code-action-indications '(eldoc-hint))
-  (eglot-ignored-server-capabilities '(:semanticTokensProvider))
   (eglot-documentation-renderer #'markdown-ts-view-mode)
   :bind
   ("C-c l c" . eglot-reconnect)
@@ -1130,8 +1157,10 @@
   (add-to-list 'eglot-server-programs '(zig-ts-mode . ("zls")) t)
   (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")) t)
   (add-to-list 'eglot-server-programs '((tsx-mode tsx-ts-mode) . ("tailwindcss-language-server" "--stdio")) t)
+  (add-to-list 'eglot-ignored-server-capabilities :documentOnTypeFormattingProvider)
+  (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
+  (add-to-list 'eglot-ignored-server-capabilities :semanticTokensProvider)
   :hook
-  (eglot-managed-mode . (lambda () (eglot-inlay-hints-mode -1)))
   ((typescript-mode typescript-ts-mode tsx-ts-mode) . eglot-ensure))
 
 (use-package breadcrumb

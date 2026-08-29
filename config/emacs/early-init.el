@@ -29,6 +29,7 @@
 (setq read-process-output-max (* 4 1024 1024)) ; 4MB
 (setq frame-inhibit-implied-resize t
       frame-resize-pixelwise t  ; fine resize
+      window-resize-pixelwise t  ; fine resize
       package-native-compile t) ; native compile packages
 (setq native-comp-async-report-warnings-errors 'silent)
 (setq native-comp-warning-on-missing-source nil)
