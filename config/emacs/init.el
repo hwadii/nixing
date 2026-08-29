@@ -995,16 +995,15 @@ is reused."
   (gnus-permanently-visible-groups "INBOX\\|Sent\\|Archive")
   (message-send-mail-function #'smtpmail-send-it))
 (use-package eldoc-box
-  :disabled
+  :if (not (eq system-type 'darwin))
   :ensure t
   :hook
-  ((eglot-managed-mode lsp-mode) . eldoc-box-hover-mode)
+  (eglot-managed-mode . eldoc-box-hover-mode)
   (eldoc-box-buffer-setup-hook . eldoc-box-prettify-ts-errors)
   :config
   (set-face-attribute 'eldoc-box-body nil :inherit 'variable-pitch)
   :custom
-  (eldoc-box-clear-with-C-g t)
-  :bind (("C-h ." . eldoc-box-help-at-point)))
+  (eldoc-box-clear-with-C-g t))
 (use-package eldoc
   :ensure nil
   :custom
