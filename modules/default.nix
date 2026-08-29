@@ -47,6 +47,7 @@
     firefox
     git
     grim
+    hledger
     hunspell
     hunspellDicts.en_US
     hunspellDicts.fr-any

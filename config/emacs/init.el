@@ -1179,6 +1179,11 @@
   (use-package magit
     :config
     (add-to-list 'magit-repository-directories '("~/dev/tenderbolt" . 1))))
+(use-package ledger-mode
+  :ensure t
+  :custom
+  (ledger-binary-path "hledger")
+  (ledger-mode-should-check-version nil))
 
 (setopt disabled-command-function nil)
 
