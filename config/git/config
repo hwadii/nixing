@@ -1,7 +1,6 @@
 [core]
   editor = $EDITOR
   excludesfile = ~/.config/git/ignore
-  pager = delta
   attributesFile = ~/.config/git/attributes
 [user]
   name = Wadii Hajji
@@ -21,9 +20,6 @@
   updateRefs = true
 [pager]
   branch = false
-[interactive]
-  diffFilter = delta --color-only
-  singleKey = true
 [alias]
   st = status
   rank = shortlog -sn --no-merges
@@ -42,12 +38,6 @@
   sort = -committerdate
 [absorb]
   maxStack = 20
-[delta]
-  navigate = true
-  side-by-side = false
-  syntax-theme = ansi
-  hyperlinks = true
-  paging = always
 [merge]
   tool = diffview
   conflictstyle = zdiff3

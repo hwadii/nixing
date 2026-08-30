@@ -42,11 +42,9 @@
 
   home.packages = with pkgs; [
     cmake
-    delta
     fd
     firefox
     git
-    grim
     hledger
     hunspell
     hunspellDicts.en_US
@@ -55,20 +53,18 @@
     mpv
     nixfmt
     nixfmt-tree
-    numix-gtk-theme
     pavucontrol
     playerctl
     qbittorrent
     ripgrep
-    slurp
     spotify
-    swaybg
     unzip
     wl-clipboard
     wmenu
     xdg-user-dirs
     xdg-utils
     zathura
+    zip
   ];
 
   # This value determines the home Manager release that your

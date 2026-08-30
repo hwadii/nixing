@@ -10,6 +10,8 @@
     menu = [ ];
   };
 
+  home.packages = [ pkgs.numix-gtk-theme ];
+
   xdg.configFile."labwc" = {
     source = ../../config/labwc;
     recursive = true;
