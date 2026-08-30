@@ -28,6 +28,7 @@
     }:
     let
       system = "x86_64-linux";
+      pkgs = import nixpkgs { inherit system; };
       pkgs-unstable = import nixpkgs-unstable { inherit system; };
     in
     {
@@ -58,6 +59,14 @@
           disko.nixosModules.disko
           ./hosts/balerion/configuration.nix
           ./modules/server
+        ];
+      };
+
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = with pkgs; [
+          just
+          nil
+          nixpkgs-fmt
         ];
       };
     };
