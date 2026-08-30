@@ -5,7 +5,7 @@
 
   programs.emacs = {
     enable = true;
-    package = pkgs-unstable.emacs31-pgtk;
+    package = pkgs-unstable.emacs31;
     extraPackages = epkgs: [
       epkgs.jinx
       epkgs.pdf-tools
