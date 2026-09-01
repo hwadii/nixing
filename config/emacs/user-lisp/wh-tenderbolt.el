@@ -6,6 +6,7 @@
 
 (require 'project)
 (require 's)
+(require 'transient)
 
 (declare-function ghostel-exec "ghostel")
 
@@ -82,7 +83,18 @@ If a session already exists, pop to its buffer."
 
 (defvar-keymap tenderbolt-mode-map
   :doc "Keymap for `tenderbolt-mode'."
-  "C-c t" tenderbolt-command-map)
+  "C-c a" #'tenderbolt-menu)
+
+;;;###autoload
+(transient-define-prefix tenderbolt-menu ()
+  ["General"
+   ("b" "Run robot" tenderbolt-run-robot)]
+  ["Backend"
+   ("s" "Open a Django shell session" tenderbolt-run-shell)]
+  ["Frontend"
+   ("r" "Run" tenderbolt-run-frontend)
+   ("t" "Run tests" tenderbolt-test-frontend)
+   ("c" "Typecheck" tenderbolt-compile-frontend)])
 
 ;;;###autoload
 (define-minor-mode tenderbolt-mode
