@@ -50,8 +50,8 @@
 
 (setopt nnrss-directory (expand-file-name "news/rss" user-emacs-directory))
 
-(setopt shell-file-name "bash")
-(setopt explicit-shell-file-name "bash")
+(setopt shell-file-name (if (eq system-type 'darwin) "zsh" "bash"))
+(setopt explicit-shell-file-name (if (eq system-type 'darwin) "zsh" "bash"))
 
 (setq-default bidi-display-reordering 'left-to-right
               bidi-paragraph-direction 'left-to-right)
@@ -69,8 +69,8 @@
 
 (setopt suggest-key-bindings 0)
 
-(setopt user-full-name       "Wadii Hajji"
-        user-mail-address    "wadii.hajji@proton.me")
+(setopt user-full-name "Wadii Hajji"
+        user-mail-address "wadii.hajji@proton.me")
 
 (setopt truncate-string-ellipsis "…")
 
@@ -388,16 +388,7 @@ The DWIM behaviour of this command is as follows:
   :custom
   (project-vc-extra-root-markers '(".project"))
   (project-list-exclude '("~/dev/sources/scratch/*"))
-  (project-switch-commands '((project-find-file "Find" ?f)
-                             (project-find-dir "Directory" ?d)
-                             (consult-ripgrep "Ripgrep" ?r)
-                             (magit-project-status "Magit" ?m)
-                             (magit-project-dispatch "Magit Dispatch" ?M)
-                             (project-eshell "Eshell" ?e)
-                             (consult-project-buffer "Buffers" ?b)
-                             (ghostel-project "Term" ?t)
-                             (project-any-command "Other" ?o)
-                             (casual-editkit-project-tmenu "Help" ??))))
+  (project-switch-commands #'project-prefix-or-any-command))
 (use-package savehist
   :ensure nil
   :custom
@@ -697,6 +688,10 @@ The DWIM behaviour of this command is as follows:
   :ensure nil
   :after rg
   :bind (:map isearch-mode-map ("M-s R" . rg-isearch-menu)))
+(use-package grep
+  :ensure nil
+  :custom
+  (grep-use-headings t))
 (use-package eshell
   :ensure nil
   :bind

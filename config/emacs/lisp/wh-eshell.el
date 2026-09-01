@@ -15,7 +15,7 @@
           (stat (magit-file-status))
           (suffix (if (= (file-user-uid) 0) "#" ">"))
           (nix-shell? (getenv "IN_NIX_SHELL")))
-      (format "%s%s%s "
+      (format "%s%s%s%s "
               (if nix-shell?
                   (propertize "<nix> " 'face `(:foreground ,cyan))
                 "")
