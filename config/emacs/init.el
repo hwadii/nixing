@@ -85,10 +85,9 @@
 
 (setopt mode-line-right-align-edge 'right-margin)
 
-(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-browse.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-insert.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-eshell-prompt.el"))
-(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/wh-tenderbolt.el"))
+(add-to-list 'load-path (concat user-emacs-directory "lisp"))
+(add-to-list 'trusted-content (concat user-emacs-directory "user-lisp/"))
+(add-to-list 'trusted-content (concat user-emacs-directory "lisp/"))
 (add-to-list 'trusted-content (concat user-emacs-directory "early-init.el"))
 
 (defvar-keymap wh-notes-map
@@ -756,9 +755,13 @@ is reused."
   (eshell-history-append t)
   (eshell-hist-ignoredups t)
   (eshell-buffer-maximum-lines 4096)
-  (eshell-prompt-function #'wh-eshell-prompt-fn)
   (eshell-visual-subcommands '(("kubectl" "exec") ("tsh" "ssh")))
   (eshell-visual-commands '("nvim" "tmux" "top" "htop" "less" "newsboat" "nu")))
+(use-package em-prompt
+  :ensure nil
+  :config
+  :custom
+  (eshell-prompt-function #'wh-eshell-prompt-fn))
 (use-package esh-mode
   :ensure nil
   :after eshell
@@ -788,12 +791,14 @@ is reused."
   :init (casual-init)
   :bind (:map dired-mode-map ("s" . casual-dired-sort-by-tmenu))
   :custom
+  (casual-avy-keybinding "s-:")
   (casual-init-hook
    '(casual-agenda-init casual-calc-init casual-calendar-init
                         casual-eshell-init casual-eww-init
                         casual-ibuffer-init casual-image-init
                         casual-info-init casual-compile-init
-                        casual-man-init casual-org-init casual-re-builder-init))
+                        casual-man-init casual-org-init casual-re-builder-init
+                        casual-avy-init))
   (casual-lib-use-unicode nil)
   :bind
   (:map wh-map ("t" . casual-timezone-tmenu))
@@ -806,7 +811,6 @@ is reused."
   :ensure t)
 (use-package envrc
   :ensure t
-  :if (not (eq system-type 'darwin))
   :hook (after-init . envrc-global-mode)
   :bind ("C-c e" . envrc-command-map))
 (use-package helpful
@@ -877,9 +881,7 @@ is reused."
       (select-window
        (cdr (ring-ref avy-ring 0))))
     t)
-  (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
-  :bind
-  ("s-:" . casual-avy-tmenu))
+  (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark))
 (use-package ace-window
   :ensure t
   :custom
@@ -1246,8 +1248,7 @@ is reused."
                                          (sql-database "postgres"))))
   (use-package mise
     :commands (global-mise-mode mise-update-dir)
-    :ensure t
-    :config (global-mise-mode))
+    :ensure t)
   (use-package magit
     :config
     (add-to-list 'magit-repository-directories '("~/dev/tenderbolt" . 1))))
@@ -1260,6 +1261,7 @@ is reused."
 (setopt disabled-command-function nil)
 
 (load custom-file t)
+(require 'wh-eshell)
 
 (provide 'init)
 
