@@ -483,6 +483,9 @@ The DWIM behaviour of this command is as follows:
   :after magit
   :custom
   (forge-owned-accounts '(("hwadii"))))
+(use-package ghub
+  :ensure t
+  :vc (:url "https://github.com/magit/ghub" :rev "v5.3.1"))
 (use-package git-modes
   :ensure t)
 (use-package transient
