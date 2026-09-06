@@ -277,6 +277,7 @@
   :bind
   (:map window-prefix-map ("R" . unbury-buffer))
   :custom
+  (window-combination-resize t)
   (quit-restore-window-no-switch t)
   (switch-to-buffer-obey-display-actions t))
 (use-package repeat
@@ -346,7 +347,6 @@ The DWIM behaviour of this command is as follows:
   (save-interprogram-paste-before-kill t)
   (kill-do-not-save-duplicates t)
   (mouse-yank-at-point t)
-  (compilation-max-output-line-length nil)
   (yank-excluded-properties t)
   (exchange-point-and-mark-highlight-region nil)
   (shell-command-prompt-show-cwd t))
@@ -667,7 +667,8 @@ The DWIM behaviour of this command is as follows:
 (use-package compile
   :ensure nil
   :custom
-  (compilation-scroll-output 'first-error))
+  (compilation-scroll-output 'first-error)
+  (compilation-max-output-line-length nil))
 (use-package fish-mode
   :ensure t)
 (use-package jinx
@@ -1136,7 +1137,7 @@ is reused."
   (fontaine-presets
    '((regular
       :default-family "PragmataPro Mono"
-      :default-height 140
+      :default-height 150
       :default-weight regular
       :default-width normal
       :fixed-pitch-family "PragmataPro Mono"
