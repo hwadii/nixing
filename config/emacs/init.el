@@ -1101,7 +1101,26 @@ is reused."
   :if (eq system-type 'darwin)
   :config (ns-auto-titlebar-mode))
 (use-package doric-themes
-  :ensure t)
+  :ensure t
+  :config
+  (doric-themes-with-colors
+    (custom-set-faces
+    `(forge-dimmed ((t :inherit shadow)))
+    `(forge-issue-completed ((t :inherit shadow)))
+    `(forge-issue-open (( )))
+    `(forge-issue-unplanned ((t :inherit shadow :strike-through t)))
+    `(forge-post-author ((t :inherit bold :foreground ,fg-main)))
+    `(forge-post-date ((t :inherit bold :foreground ,fg-shadow-subtle)))
+    `(forge-pullreq-merged ((t :foreground ,fg-accent)))
+    `(forge-pullreq-open ((t :foreground ,fg-shadow-subtle)))
+    `(forge-pullreq-rejected ((t :foreground ,fg-red :strike-through t)))
+    `(forge-topic-done ((t :foreground ,fg-shadow-subtle)))
+    `(forge-topic-pending ((t :foreground ,fg-yellow)))
+    `(forge-topic-slug-completed ((t :inherit shadow)))
+    `(forge-topic-slug-open ((t :inherit shadow)))
+    `(forge-topic-slug-saved ((t :inherit fg-green)))
+    `(forge-topic-slug-unplanned ((t :inherit shadow :strike-through t)))
+    `(forge-topic-unread ((t :inherit bold))))))
 (use-package posframe
   :ensure t
   :pin gnu)
