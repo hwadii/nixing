@@ -102,8 +102,8 @@ input {
 }
 
 output "Dell Inc. DELL U2725QE 39HWPF4" {
-    mode "3840x2160@60"
-    scale 1.5
+    mode "3840x2160@119.999"
+    scale 2
 }
 
 // Settings that influence how windows are positioned and sized.
