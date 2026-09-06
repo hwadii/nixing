@@ -7,10 +7,11 @@
     enable = true;
     package = pkgs-unstable.emacs31-gtk3;
     extraPackages = epkgs: [
+      epkgs.ghostel
       epkgs.jinx
       epkgs.pdf-tools
+      epkgs.transient
       epkgs.tree-sitter-langs
-      epkgs.ghostel
       epkgs.treesit-grammars.with-all-grammars
     ];
   };
