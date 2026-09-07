@@ -109,6 +109,8 @@
   (no-littering-theme-backups))
 (use-package package
   :ensure nil
+  :bind
+  (:map wh-map ("p" . list-packages))
   :custom
   (package-autosuggest-mode t)
   (package-menu-use-current-if-no-marks nil))
@@ -153,7 +155,7 @@
   :custom
   (tramp-use-scp-direct-remote-copying t)
   (tramp-copy-size-limit (* 1024 1024)) ;; 1MB
-  (tramp-verbose 2))
+  (tramp-verbose 1))
 (use-package isearch
   :ensure nil
   :custom
@@ -349,7 +351,8 @@ The DWIM behaviour of this command is as follows:
   (mouse-yank-at-point t)
   (yank-excluded-properties t)
   (exchange-point-and-mark-highlight-region nil)
-  (shell-command-prompt-show-cwd t))
+  (shell-command-prompt-show-cwd t)
+  (async-shell-command-buffer 'rename-buffer))
 (use-package autorevert
   :ensure nil
   :config
@@ -609,6 +612,10 @@ The DWIM behaviour of this command is as follows:
   (remember-notes-initial-major-mode 'org-mode)
   (remember-in-new-frame t)
   (remember-data-file "~/code/notes/remember"))
+(use-package completion-preview
+  :ensure nil
+  :config (global-completion-preview-mode)
+  :custom (global-completion-preview-modes '(prog-mode)))
 (use-package corfu
   :ensure t
   :after orderless
@@ -996,7 +1003,6 @@ is reused."
   (gnus-permanently-visible-groups "INBOX\\|Sent\\|Archive")
   (message-send-mail-function #'smtpmail-send-it))
 (use-package eldoc-box
-  :if (not (eq system-type 'darwin))
   :ensure t
   :hook
   (eglot-managed-mode . eldoc-box-hover-mode)
@@ -1188,7 +1194,6 @@ is reused."
   ("C-c l l" . eglot)
   ("C-c l r" . eglot-rename)
   ("C-c l s" . eglot-shutdown)
-  ("C-c l h" . eglot-inlay-hints-mode)
   ("C-c l i" . eglot-find-implementation)
   ("C-c l a" . eglot-code-actions)
   ("C-c l o" . eglot-code-action-organize-imports)
