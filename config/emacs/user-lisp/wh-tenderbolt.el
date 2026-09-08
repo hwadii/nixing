@@ -87,14 +87,16 @@ If a session already exists, pop to its buffer."
 
 ;;;###autoload
 (transient-define-prefix tenderbolt-menu ()
-  ["General"
-   ("b" "Run robot" tenderbolt-run-robot)]
-  ["Backend"
-   ("s" "Open a Django shell session" tenderbolt-run-shell)]
-  ["Frontend"
-   ("r" "Run" tenderbolt-run-frontend)
-   ("t" "Run tests" tenderbolt-test-frontend)
-   ("c" "Typecheck" tenderbolt-compile-frontend)])
+  "Invoke a command under Tenderbolt project."
+  ["Tenderbolt commands"
+   ["General"
+    ("b" "Robot" tenderbolt-run-robot)]
+   ["Backend"
+    ("s" "Django Shell" tenderbolt-run-shell)]
+   ["Frontend"
+    ("r" "Run" tenderbolt-run-frontend)
+    ("t" "Tests" tenderbolt-test-frontend)
+    ("c" "Typecheck" tenderbolt-compile-frontend)]])
 
 ;;;###autoload
 (define-minor-mode tenderbolt-mode
