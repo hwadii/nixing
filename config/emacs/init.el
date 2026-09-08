@@ -1207,9 +1207,7 @@ is reused."
   (add-to-list 'eglot-server-programs '((tsx-mode tsx-ts-mode) . ("tailwindcss-language-server" "--stdio")) t)
   (add-to-list 'eglot-ignored-server-capabilities :documentOnTypeFormattingProvider)
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
-  (add-to-list 'eglot-ignored-server-capabilities :semanticTokensProvider)
-  :hook
-  ((typescript-mode typescript-ts-mode tsx-ts-mode) . eglot-ensure))
+  (add-to-list 'eglot-ignored-server-capabilities :semanticTokensProvider))
 
 (use-package breadcrumb
   :ensure t
