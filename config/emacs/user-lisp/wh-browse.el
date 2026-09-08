@@ -38,12 +38,6 @@
   (interactive "sURL: \nsTimecode: ")
   (browse-url-video-player video timecode))
 
-;;;###autoload
-(defun browse-ddg (q)
-  "Search query Q in DuckDuckGo and open URL in the browser."
-  (interactive "sQuery: ")
-  (browse-url (format "https://duckduckgo.com/?q=%s" q)))
-
 (provide 'wh-browse)
 
 ;;; wh-browse.el ends here

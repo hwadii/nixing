@@ -614,7 +614,6 @@ The DWIM behaviour of this command is as follows:
   (remember-data-file "~/code/notes/remember"))
 (use-package completion-preview
   :ensure nil
-  :config (global-completion-preview-mode)
   :custom (global-completion-preview-modes '(prog-mode)))
 (use-package corfu
   :ensure t
@@ -838,22 +837,26 @@ is reused."
     "+" #'apply-operation-to-number-at-point
     "-" #'apply-operation-to-number-at-point)
   (define-key global-map (kbd "C-c n") operate-on-number-repeat-map))
+(use-package webjump
+  :ensure nil
+  :bind (:map wh-map ("w" . webjump)))
 (use-package embark
   :ensure t
   :config
-  (defvar-keymap wh-embark-browse-map
-    :doc "Keymap for Web search commands"
-    :parent nil
-    "d" #'browse-ddg
-    "s" #'ddgr-search)
-  (fset 'wh-embark-browse-map wh-embark-browse-map)
-  (keymap-set embark-general-map "S" 'wh-embark-browse-map)
+  (defun wh-embark-webjump (term)
+    "Open a WebJump site using TERM as its query."
+    (require 'webjump)
+    (require 'cl-lib)
+    (cl-letf (((symbol-function 'webjump-read-string)
+               (lambda (_prompt) term)))
+      (webjump)))
   :bind
   ("C-." . embark-act)
   ("C-;" . embark-dwim)
-  ("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
+  ("C-h B" . embark-bindings)
   (:map embark-general-map
-        ("W" . dictionary-search))
+        ("W" . dictionary-search)
+        ("G" . wh-embark-webjump))
   :custom
   (embark-indicators
    '(embark-minimal-indicator  ; default is embark-mixed-indicator
@@ -871,7 +874,6 @@ is reused."
   (server-client-instructions nil)
   :config
   (unless (server-running-p)
-    ;; Start server.
     (server-start)))
 (use-package so-long
   :ensure nil
@@ -1141,8 +1143,6 @@ is reused."
 (use-package typescript-ts-mode
   :ensure nil
   :mode ("\\.[cm]ts\\'" . typescript-ts-mode-maybe))
-(use-package ddgr
-  :ensure t)
 (use-package tempel
   :ensure t
   :bind ("M-*" . tempel-complete))
