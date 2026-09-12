@@ -3,12 +3,11 @@
 {
   home.packages = with pkgs; [
     adwaita-fonts
-    atkinson-hyperlegible-next
     atkinson-hyperlegible-mono
-    dejavu_fonts
+    atkinson-hyperlegible-next
+    maple-mono.Normal-Variable
+    maple-mono.NormalNL-OTF
     newcomputermodern
-    noto-fonts-cjk-sans
-    noto-fonts-color-emoji
     source-code-pro
     source-sans-pro
     work-sans

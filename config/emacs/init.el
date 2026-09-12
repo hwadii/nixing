@@ -1162,11 +1162,11 @@ is reused."
   :custom
   (fontaine-presets
    '((regular
-      :default-family "PragmataPro Mono"
-      :default-height 130
+      :default-family "Maple Mono Normal"
+      :default-height 120
       :default-weight regular
       :default-width normal
-      :fixed-pitch-family "PragmataPro Mono"
+      :fixed-pitch-family "Maple Mono Normal"
       :fixed-pitch-weight regular
       :variable-pitch-family "Work Sans"
       :variable-pitch-height 130))))

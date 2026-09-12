@@ -2,7 +2,7 @@
 
 {
   programs.swaylock = {
-    enable = true;
+    enable = false;
     settings = {
       daemonize = true;
       ignore-empty-password = true;

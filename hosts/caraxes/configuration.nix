@@ -141,7 +141,6 @@
   services.udisks2.enable = true;
 
   security.rtkit.enable = true;
-  security.pam.services.swaylock = { };
 
   nix.settings.experimental-features = [
     "nix-command"
@@ -155,6 +154,8 @@
     man.cache.enable = true;
     nixos.includeAllModules = true;
   };
+
+  fonts.enableDefaultPackages = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
