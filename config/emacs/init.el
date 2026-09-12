@@ -762,11 +762,6 @@ is reused."
   (eshell-buffer-maximum-lines 4096)
   (eshell-visual-subcommands '(("kubectl" "exec") ("tsh" "ssh")))
   (eshell-visual-commands '("nvim" "tmux" "top" "htop" "less" "newsboat" "nu")))
-(use-package em-prompt
-  :ensure nil
-  :config
-  :custom
-  (eshell-prompt-function #'wh-eshell-prompt-fn))
 (use-package esh-mode
   :ensure nil
   :after eshell
@@ -974,6 +969,8 @@ is reused."
   :bind (:map wh-map ("g" . git-link-dispatch)))
 (use-package modus-themes
   :ensure t
+  :hook
+  (modus-themes-post-load . wh-eshell-modus-prompt-hook)
   :init
   (modus-themes-include-derivatives-mode)
   :custom
@@ -1110,6 +1107,7 @@ is reused."
   :config (ns-auto-titlebar-mode))
 (use-package doric-themes
   :ensure t
+  :hook (doric-themes-post-load . wh-eshell-doric-prompt-hook)
   :config
   (doric-themes-with-colors
     (custom-set-faces
@@ -1165,13 +1163,13 @@ is reused."
   (fontaine-presets
    '((regular
       :default-family "PragmataPro Mono"
-      :default-height 150
+      :default-height 130
       :default-weight regular
       :default-width normal
       :fixed-pitch-family "PragmataPro Mono"
       :fixed-pitch-weight regular
       :variable-pitch-family "Work Sans"
-      :variable-pitch-height 150))))
+      :variable-pitch-height 130))))
 (set-fontset-font t nil "DejaVu Sans Mono" nil 'append)
 (set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
 (set-fontset-font t nil "Symbols Nerd Font" nil 'append)

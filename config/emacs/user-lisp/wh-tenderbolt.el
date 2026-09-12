@@ -85,7 +85,6 @@ If a session already exists, pop to its buffer."
   :doc "Keymap for `tenderbolt-mode'."
   "C-c a" #'tenderbolt-menu)
 
-;;;###autoload
 (transient-define-prefix tenderbolt-menu ()
   "Invoke a command under Tenderbolt project."
   ["Tenderbolt commands"

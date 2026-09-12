@@ -17,8 +17,9 @@
 
 (defun browse-url-video-player (url &optional timecode)
   "Browse URL in appropriate video player at the given TIMECODE."
-  (let ((start (if timecode timecode "0")))
-    (start-process browse-streams-player nil browse-streams-player "--mpv-start" start (shell-quote-wildcard-pattern url))))
+  (if timecode
+      (start-process browse-streams-player nil browse-streams-player "--start" timecode (shell-quote-wildcard-pattern url))
+    (start-process browse-streams-player nil browse-streams-player (shell-quote-wildcard-pattern url))))
 
 ;;;###autoload
 (defun browse-stream (stream)
