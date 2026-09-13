@@ -486,9 +486,6 @@ The DWIM behaviour of this command is as follows:
   :after magit
   :custom
   (forge-owned-accounts '(("hwadii"))))
-(use-package ghub
-  :ensure t
-  :vc (:url "https://github.com/magit/ghub" :rev "v5.3.1"))
 (use-package git-modes
   :ensure t)
 (use-package transient
@@ -786,12 +783,16 @@ is reused."
     (orderless-matching-styles '(orderless-literal)))
   :custom
   (orderless-matching-styles '(orderless-literal orderless-regexp)))
+(use-package casual-avy
+  :ensure t
+  :custom
+  (casual-avy-keybinding "s-:"))
 (use-package casual
   :ensure t
+  :after casual-avy
   :init (casual-init)
   :bind (:map dired-mode-map ("s" . casual-dired-sort-by-tmenu))
   :custom
-  (casual-avy-keybinding "s-:")
   (casual-init-hook
    '(casual-agenda-init casual-calc-init casual-calendar-init
                         casual-eshell-init casual-eww-init
@@ -803,9 +804,6 @@ is reused."
   :bind
   (:map wh-map ("t" . casual-timezone-tmenu))
   (:map project-prefix-map ("?" . casual-editkit-project-tmenu)))
-(use-package casual-avy
-  :ensure t
-  :after casual)
 (use-package ef-themes
   :after modus-themes
   :ensure t)
@@ -1107,26 +1105,7 @@ is reused."
   :config (ns-auto-titlebar-mode))
 (use-package doric-themes
   :ensure t
-  :hook (doric-themes-post-load . wh-eshell-doric-prompt-hook)
-  :config
-  (doric-themes-with-colors
-    (custom-set-faces
-    `(forge-dimmed ((t :inherit shadow)))
-    `(forge-issue-completed ((t :inherit shadow)))
-    `(forge-issue-open (( )))
-    `(forge-issue-unplanned ((t :inherit shadow :strike-through t)))
-    `(forge-post-author ((t :inherit bold :foreground ,fg-main)))
-    `(forge-post-date ((t :inherit bold :foreground ,fg-shadow-subtle)))
-    `(forge-pullreq-merged ((t :foreground ,fg-accent)))
-    `(forge-pullreq-open ((t :foreground ,fg-shadow-subtle)))
-    `(forge-pullreq-rejected ((t :foreground ,fg-red :strike-through t)))
-    `(forge-topic-done ((t :foreground ,fg-shadow-subtle)))
-    `(forge-topic-pending ((t :foreground ,fg-yellow)))
-    `(forge-topic-slug-completed ((t :inherit shadow)))
-    `(forge-topic-slug-open ((t :inherit shadow)))
-    `(forge-topic-slug-saved ((t :inherit fg-green)))
-    `(forge-topic-slug-unplanned ((t :inherit shadow :strike-through t)))
-    `(forge-topic-unread ((t :inherit bold))))))
+  :hook (doric-themes-post-load . wh-eshell-doric-prompt-hook))
 (use-package posframe
   :ensure t
   :pin gnu)

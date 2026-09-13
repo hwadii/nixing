@@ -10,7 +10,6 @@
       epkgs.ghostel
       epkgs.jinx
       epkgs.pdf-tools
-      epkgs.transient
       epkgs.tree-sitter-langs
       epkgs.treesit-grammars.with-all-grammars
     ];
