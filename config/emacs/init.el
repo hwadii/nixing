@@ -233,7 +233,9 @@
   :hook (marginalia-mode . nerd-icons-completion-marginalia-setup))
 (use-package fish-completion
   :ensure t
-  :hook (eshell-mode . fish-completion-mode))
+  :hook
+  (eshell-mode . fish-completion-mode)
+  (shell-mode . fish-completion-mode))
 (use-package rainbow-mode
   :ensure t
   :custom
@@ -464,11 +466,11 @@ The DWIM behaviour of this command is as follows:
         ("m" . magit-project-status)
         ("M" . magit-project-dispatch))
   :config
-  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-worktrees nil t)
-  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules nil t)
+  (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-worktrees nil t)
+  (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-modules nil t)
   :custom
   (magit-define-global-key-bindings 'recommended)
-  (magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
+  (magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
   (magit-format-file-function 'magit-format-file-nerd-icons)
   (magit-save-repository-buffers nil)
   (magit-process-apply-ansi-colors t)
@@ -647,16 +649,23 @@ The DWIM behaviour of this command is as follows:
         ("t" . ghostel-project)
         ("T" . ghostel-project-list-buffers))
   :custom
+  (ghostel-module-auto-install 'download)
   (ghostel-shell "fish"))
 (use-package ghostel-eshell
   :ensure nil
-  :hook (eshell-load . ghostel-eshell-visual-command-mode))
+  :hook (eshell-load . ghostel-eshell-visual-command-mode)
+  :custom
+  (ghostel-eshell-track-title t))
 (use-package ghostel-compile
   :ensure nil
   :config
   (ghostel-compile-global-mode)
   :custom
   (ghostel-compile-global-mode-excluded-modes '(grep-mode rg-mode)))
+(use-package ghostel-comint
+  :ensure nil
+  :hook
+  (shell-mode . ghostel-comint-mode))
 (use-package which-key
   :ensure nil
   :pin gnu
@@ -813,7 +822,15 @@ is reused."
   (define-key global-map (kbd "C-c n") operate-on-number-repeat-map))
 (use-package webjump
   :ensure nil
-  :bind (:map wh-map ("w" . webjump)))
+  :bind (:map wh-map ("w" . webjump))
+  :custom
+  (webjump-sites '(("DuckDuckGo"
+                    . [simple-query "https://lite.duckduckgo.com"
+                                    "https://lite.duckduckgo.com/lite/?q=" ""])
+                   ("Wikipedia"
+                    . [simple-query "https://wikipedia.org"
+                                    "https://wikipedia.org/w/?search=" ""])
+                   )))
 (use-package embark
   :ensure t
   :config
@@ -1038,10 +1055,10 @@ is reused."
 (use-package nix-ts-mode
   :mode "\\.nix\\'"
   :ensure t)
-(use-package visual-replace
+(use-package substitute
   :ensure t
-  :custom
-  (visual-replace-default-to-full-scope t))
+  :bind (:map wh-map ("s" . substitute-prefix-map))
+  :hook (substitute-post-replace-functions . substitute-report-operation))
 (use-package doom-modeline
   :ensure t
   :pin melpa
@@ -1119,20 +1136,25 @@ is reused."
 (use-package fontaine
   :ensure t
   :init (fontaine-mode 1)
-  :config (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
+  :config (fontaine-set-preset t)
   :bind (:map wh-map ("f" . fontaine-set-preset))
   :custom
   (fontaine-presets
-   '((regular
-      :default-family "Maple Mono Normal"
-      :default-height 120
+   '((t
+      :default-family "Maple Mono Normal NL NF"
+      :default-height 150
       :default-weight regular
       :default-width normal
-      :fixed-pitch-family "Maple Mono Normal"
+      :fixed-pitch-family "Maple Mono Normal NL NF"
       :fixed-pitch-weight regular
       :variable-pitch-family "Work Sans"
-      :variable-pitch-height 130))))
-(set-fontset-font t nil "DejaVu Sans Mono" nil 'append)
+      :variable-pitch-weight regular
+      :variable-pitch-height 150)
+     (macos
+      :default-weight light
+      :fixed-pitch-weight light
+      :bold-weight medium))))
+(set-fontset-font t nil "Source Code Pro" nil 'append)
 (set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
 (set-fontset-font t nil "Symbols Nerd Font" nil 'append)
 
@@ -1232,7 +1254,10 @@ is reused."
     :ensure t)
   (use-package magit
     :config
-    (add-to-list 'magit-repository-directories '("~/dev/tenderbolt" . 1))))
+    (add-to-list 'magit-repository-directories '("~/dev/tenderbolt" . 1)))
+  (use-package fontaine
+    :ensure nil
+    :config (fontaine-set-preset 'macos)))
 (use-package ledger-mode
   :ensure t
   :custom
