@@ -82,7 +82,8 @@ If ARG is passed, create a new buffer."
      :sentinel (lambda (p _event)
                  (unless (process-live-p p)
                    (with-current-buffer buf
-                     (ansi-color-filter-region (point-min) (point-max))
+                     (let ((inhibit-read-only t))
+                       (ansi-color-filter-region (point-min) (point-max)))
                      (view-mode 1)))))
     (switch-to-buffer buf)))
 
@@ -100,14 +101,6 @@ If a session already exists, pop to its buffer."
         (ghostel-exec buf "make" '("shell"))))
     (pop-to-buffer-same-window name)))
 
-(defvar-keymap tenderbolt-command-map
-  :doc "Tenderbolt commands."
-  "c" #'tenderbolt-compile-frontend
-  "r" #'tenderbolt-run-frontend
-  "b" #'tenderbolt-run-robot
-  "s" #'tenderbolt-run-shell
-  "t" #'tenderbolt-test-frontend)
-
 (defvar-keymap tenderbolt-mode-map
   :doc "Keymap for `tenderbolt-mode'."
   "C-c a" #'tenderbolt-menu)
@@ -115,8 +108,9 @@ If a session already exists, pop to its buffer."
 (transient-define-prefix tenderbolt-menu ()
   "Invoke a command under Tenderbolt project."
   ["Tenderbolt commands"
-   ["General"
-    ("b" "Robot" tenderbolt-run-robot)]
+   ["Robot"
+    ("b" "Interactive" tenderbolt-run-robot)
+    ("g" "Prompt" tenderbolt-go-robot)]
    ["Backend"
     ("s" "Django Shell" tenderbolt-run-shell)]
    ["Frontend"
