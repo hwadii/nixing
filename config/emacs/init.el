@@ -76,9 +76,6 @@
 
 (setopt uniquify-buffer-name-style 'forward)
 
-(setopt comint-prompt-read-only t)
-(setopt comint-buffer-maximum-size 4096)
-
 (setopt confirm-nonexistent-file-or-buffer nil)
 
 (setopt auto-save-no-message t)
@@ -167,6 +164,8 @@
   (search-default-mode #'char-fold-to-regexp))
 (use-package ibuffer
   :ensure nil
+  :custom
+  (ibuffer-human-readable-size t)
   :bind ([remap list-buffers] . ibuffer))
 (use-package hippie-expand
   :ensure nil
@@ -424,6 +423,7 @@ The DWIM behaviour of this command is as follows:
         ("M-DEL" . vertico-directory-delete-word))
   :init
   (vertico-mode +1)
+  (vertico-reverse-mode +1)
   (vertico-mouse-mode -1))
 (use-package vertico-repeat
   :after vertico
@@ -647,13 +647,16 @@ The DWIM behaviour of this command is as follows:
         ("t" . ghostel-project)
         ("T" . ghostel-project-list-buffers))
   :custom
-  (ghostel-shell shell-file-name))
+  (ghostel-shell "fish"))
 (use-package ghostel-eshell
   :ensure nil
   :hook (eshell-load . ghostel-eshell-visual-command-mode))
 (use-package ghostel-compile
   :ensure nil
-  :config (ghostel-compile-global-mode))
+  :config
+  (ghostel-compile-global-mode)
+  :custom
+  (ghostel-compile-global-mode-excluded-modes '(grep-mode rg-mode)))
 (use-package which-key
   :ensure nil
   :pin gnu
@@ -726,28 +729,6 @@ is reused."
         (setq input (concat "ghostel " input)))
       (insert input))
     (eshell-send-input))
-  (defun adviced:eshell/cat (orig-fun &rest args)
-    "Like `eshell/cat' but with image support."
-    (if (seq-every-p (lambda (arg)
-                       (and (stringp arg)
-                            (file-exists-p arg)
-                            (image-supported-file-p arg)))
-                     args)
-        (with-temp-buffer
-          (insert "\n")
-          (dolist (path args)
-            (let ((spec (create-image
-                         (expand-file-name path)
-                         (image-type-from-file-name path)
-                         nil :max-width 350
-                         :conversion (lambda (data) data))))
-              (image-flush spec)
-              (insert-image spec))
-            (insert "\n"))
-          (insert "\n")
-          (buffer-string))
-      (apply orig-fun args)))
-  (advice-add #'eshell/cat :around #'adviced:eshell/cat)
   :custom
   (eshell-prefer-lisp-functions t)
   (eshell-scroll-to-bottom-on-output nil)
@@ -898,14 +879,14 @@ is reused."
   (calendar-longitude [2 21 07 east])
   (calendar-location-name "Paris, FR")
   (calendar-mark-holidays t)
-  (calendar-mark-diary-flags t))
+  (calendar-date-style 'european)
+  (calendar-mark-diary-entries-flag t))
 (use-package consult
   :bind
   ("C-c M-x" . consult-mode-command)
   ("C-c h" . consult-history)
   ("C-c m" . consult-man)
   ("C-c i" . consult-info)
-  ([remap Info-search] . consult-info)
   ("C-x b" . consult-buffer)
   ("C-x 4 b" . consult-buffer-other-window)
   ("C-x 5 b" . consult-buffer-other-frame)
@@ -929,14 +910,16 @@ is reused."
   (setq register-preview-delay 0.5
         register-preview-function #'consult-register-format)
   :custom
-  (consult-narrow-key "<") ;; "C-+"
+  (consult-narrow-key "<")
   (consult-man-args "man -k"))
 (use-package embark-consult
   :ensure t
   :after (embark consult))
 (use-package mouse
   :ensure nil
-  :config (context-menu-mode)
+  :config
+  (context-menu-mode)
+  (mouse-shift-adjust-mode)
   :custom
   (mouse-drag-mode-line-buffer t)
   (mouse-drag-and-drop-region t)
@@ -1255,6 +1238,13 @@ is reused."
   :custom
   (ledger-binary-path "hledger")
   (ledger-mode-should-check-version nil))
+(use-package comint
+  :ensure nil
+  :custom
+  (comint-prompt-read-only t)
+  (comint-process-echoes t)
+  (comint-buffer-maximum-size 4096))
+
 
 (setopt disabled-command-function nil)
 

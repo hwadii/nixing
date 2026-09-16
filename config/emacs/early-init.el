@@ -57,6 +57,7 @@
                                    ("melpa"  . 70)))
 (package-initialize)
 
-(setq ns-use-thin-smoothing t)
+(setq ns-use-thin-smoothing t
+      ns-click-through nil)
 
 ;;; early-init.el ends here.

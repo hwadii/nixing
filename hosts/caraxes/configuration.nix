@@ -101,7 +101,6 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.input-fonts.acceptLicense = true;
 
   # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
