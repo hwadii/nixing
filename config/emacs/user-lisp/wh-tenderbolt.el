@@ -41,7 +41,7 @@ If ARG is given, then prompt with `completing-read' for a file."
 (defun tenderbolt-run-frontend ()
   "Run the Tenderbolt frontend using pitchfork."
   (interactive)
-  (async-shell-command "pitchfork start -f ui"))
+  (async-shell-command "mise x -- pitchfork start -f ui"))
 
 ;;;###autoload
 (defun tenderbolt-run-robot (&optional arg)
@@ -58,6 +58,33 @@ If ARG is passed, create a new buffer."
       (let ((buf (generate-new-buffer name)))
         (ghostel-exec buf "claude")
         (pop-to-buffer-same-window buf)))))
+
+(defvar tenderbolt-go-robot-history nil
+  "History for `tenderbolt-go-robot'.")
+
+;;;###autoload
+(defun tenderbolt-go-robot (prompt)
+  "Send PROMPT to robot."
+  (interactive (list (read-string "Prompt: " nil 'tenderbolt-go-robot-history)))
+  (let* ((proj (project-current t))
+         (default-directory (project-root proj))
+         (name (generate-new-buffer "*robot-prompt: tenderbolt*"))
+         (buf (get-buffer-create name))
+         (shell-file-name "fish")
+         (command (list "claude" "--model" "opus" "--effort" "medium" "-p" prompt)))
+    (with-current-buffer buf
+      (erase-buffer)
+      (markdown-mode))
+    (make-process
+     :name "robot-prompt"
+     :buffer buf
+     :command command
+     :sentinel (lambda (p _event)
+                 (unless (process-live-p p)
+                   (with-current-buffer buf
+                     (ansi-color-filter-region (point-min) (point-max))
+                     (view-mode 1)))))
+    (switch-to-buffer buf)))
 
 ;;;###autoload
 (defun tenderbolt-run-shell ()
