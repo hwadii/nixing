@@ -1075,7 +1075,10 @@ is reused."
   (doom-modeline-env-enable-ruby nil)
   (doom-modeline-icon t)
   (doom-modeline-lsp t)
-  (doom-modeline-check 'simple))
+  (doom-modeline-check 'simple)
+  (doom-modeline-env-version nil)
+  (doom-modeline-display-misc-in-all-mode-lines nil)
+  (doom-modeline-project-name nil))
 (use-package man
   :ensure nil
   :custom
