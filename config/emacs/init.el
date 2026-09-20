@@ -1145,14 +1145,14 @@ is reused."
   (fontaine-presets
    '((t
       :default-family "PragmataPro Mono"
-      :default-height 140
+      :default-height 110
       :default-weight regular
       :default-width normal
       :fixed-pitch-family "PragmataPro Mono"
       :fixed-pitch-weight regular
       :variable-pitch-family "Work Sans"
       :variable-pitch-weight regular
-      :variable-pitch-height 140)
+      :variable-pitch-height 110)
      (macos
       :default-height 150
       :variable-pitch-height 150))))
