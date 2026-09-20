@@ -830,6 +830,9 @@ is reused."
                    ("Wikipedia"
                     . [simple-query "https://wikipedia.org"
                                     "https://wikipedia.org/w/?search=" ""])
+                   ("Nixpkgs"
+                    . [simple-query "https://search.nixos.org"
+                                    "https://search.nixos.org/packages?channel=unstable&query=" ""])
                    )))
 (use-package embark
   :ensure t
@@ -1141,19 +1144,18 @@ is reused."
   :custom
   (fontaine-presets
    '((t
-      :default-family "Maple Mono Normal NL NF"
-      :default-height 150
+      :default-family "PragmataPro Mono"
+      :default-height 140
       :default-weight regular
       :default-width normal
-      :fixed-pitch-family "Maple Mono Normal NL NF"
+      :fixed-pitch-family "PragmataPro Mono"
       :fixed-pitch-weight regular
       :variable-pitch-family "Work Sans"
       :variable-pitch-weight regular
-      :variable-pitch-height 150)
+      :variable-pitch-height 140)
      (macos
-      :default-weight light
-      :fixed-pitch-weight light
-      :bold-weight medium))))
+      :default-height 150
+      :variable-pitch-height 150))))
 (set-fontset-font t nil "Source Code Pro" nil 'append)
 (set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
 (set-fontset-font t nil "Symbols Nerd Font" nil 'append)
