@@ -50,9 +50,6 @@
 
 (setopt nnrss-directory (expand-file-name "news/rss" user-emacs-directory))
 
-(setopt shell-file-name (if (eq system-type 'darwin) "zsh" "bash"))
-(setopt explicit-shell-file-name (if (eq system-type 'darwin) "zsh" "bash"))
-
 (setq-default bidi-display-reordering 'left-to-right
               bidi-paragraph-direction 'left-to-right)
 (setq bidi-inhibit-bpa t)
@@ -280,7 +277,7 @@
   :bind
   (:map window-prefix-map ("R" . unbury-buffer))
   :custom
-  (window-combination-resize t)
+  (window-combination-resize nil)
   (quit-restore-window-no-switch t)
   (switch-to-buffer-obey-display-actions t))
 (use-package repeat
@@ -351,9 +348,7 @@ The DWIM behaviour of this command is as follows:
   (kill-do-not-save-duplicates t)
   (mouse-yank-at-point t)
   (yank-excluded-properties t)
-  (exchange-point-and-mark-highlight-region nil)
-  (shell-command-prompt-show-cwd t)
-  (async-shell-command-buffer 'rename-buffer))
+  (exchange-point-and-mark-highlight-region nil))
 (use-package autorevert
   :ensure nil
   :config
@@ -391,7 +386,7 @@ The DWIM behaviour of this command is as follows:
   (:map project-prefix-map ("C-f" . project-root-find-file))
   :custom
   (project-vc-extra-root-markers '(".project"))
-  (project-list-exclude '("~/dev/sources/scratch/*"))
+  (project-list-exclude '("~/dev/sources/*"))
   (project-switch-commands #'project-prefix-or-any-command))
 (use-package savehist
   :ensure nil
@@ -648,9 +643,13 @@ The DWIM behaviour of this command is as follows:
   (:map project-prefix-map
         ("t" . ghostel-project)
         ("T" . ghostel-project-list-buffers))
+  :config
+  (setopt ghostel-keymap-exceptions
+          (append ghostel-keymap-exceptions '("M-o" "C-S-<right>"
+                                              "C-S-<left>" "C-S-<up>"
+                                              "C-S-<down>" "M-s" "M-!" "M-&")))
   :custom
-  (ghostel-module-auto-install 'download)
-  (ghostel-shell "fish"))
+  (ghostel-module-auto-install 'download))
 (use-package ghostel-eshell
   :ensure nil
   :hook (eshell-load . ghostel-eshell-visual-command-mode)
@@ -746,9 +745,7 @@ is reused."
   (eshell-history-size (* 1024 256))
   (eshell-history-append t)
   (eshell-hist-ignoredups t)
-  (eshell-buffer-maximum-lines 4096)
-  (eshell-visual-subcommands '(("kubectl" "exec") ("tsh" "ssh")))
-  (eshell-visual-commands '("nvim" "tmux" "top" "htop" "less" "newsboat" "nu")))
+  (eshell-buffer-maximum-lines 4096))
 (use-package esh-mode
   :ensure nil
   :after eshell
@@ -833,6 +830,9 @@ is reused."
                    ("Nixpkgs"
                     . [simple-query "https://search.nixos.org"
                                     "https://search.nixos.org/packages?channel=unstable&query=" ""])
+                   ("Homebrew"
+                    . [simple-query "https://brew.sh"
+                                    "https://formulae.brew.sh/formula/" ""])
                    )))
 (use-package embark
   :ensure t
@@ -1077,8 +1077,7 @@ is reused."
   (doom-modeline-lsp t)
   (doom-modeline-check 'simple)
   (doom-modeline-env-version nil)
-  (doom-modeline-display-misc-in-all-mode-lines nil)
-  (doom-modeline-project-name nil))
+  (doom-modeline-display-misc-in-all-mode-lines nil))
 (use-package man
   :ensure nil
   :custom
@@ -1151,14 +1150,13 @@ is reused."
       :default-height 100
       :default-weight regular
       :default-width normal
-      :fixed-pitch-family "DejaVu Sans Mono"
       :fixed-pitch-weight regular
       :variable-pitch-family "Work Sans"
       :variable-pitch-weight regular
       :variable-pitch-height 110)
      (macos
-      :default-height 150
-      :variable-pitch-height 150))))
+      :default-height 130
+      :variable-pitch-height 140))))
 (set-fontset-font t nil "Source Code Pro" nil 'append)
 (set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
 (set-fontset-font t nil "Symbols Nerd Font" nil 'append)
@@ -1274,6 +1272,12 @@ is reused."
   (comint-prompt-read-only t)
   (comint-process-echoes t)
   (comint-buffer-maximum-size 4096))
+(use-package shell
+  :ensure nil
+  :custom
+  (shell-command-prompt-show-cwd t)
+  (shell-completion-execonly nil)
+  (async-shell-command-buffer 'rename-buffer))
 
 
 (setopt disabled-command-function nil)
