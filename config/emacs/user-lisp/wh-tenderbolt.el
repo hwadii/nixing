@@ -88,17 +88,30 @@ If ARG is passed, create a new buffer."
     (switch-to-buffer buf)))
 
 ;;;###autoload
-(defun tenderbolt-run-shell ()
+(defun tenderbolt-run-django-shell ()
   "Run a Django shell session within Tenderbolt.
 If a session already exists, pop to its buffer."
   (interactive)
   (let* ((proj (project-current t))
          (default-directory (project-root proj))
-         (name "*shell: tenderbolt*")
+         (name "*django-shell: tenderbolt*")
          (existing (get-buffer name)))
     (unless existing
       (let ((buf (get-buffer-create name)))
         (ghostel-exec buf "make" '("shell"))))
+    (pop-to-buffer-same-window name)))
+
+;;;###autoload
+(defun tenderbolt-run-node-shell ()
+  "Run a Node shell within Tenderbolt.
+If a session already exists, pop to its buffer."
+  (interactive)
+  (let* ((proj (project-current "~/dev/tenderbolt/tenderbolt"))
+         (default-directory (expand-file-name "frontend/" (project-root proj)))
+         (name "*node-shell: tenderbolt*")
+         (buf (make-comint-in-buffer "node-shell: tenderbolt"
+                                     "*node-shell: tenderbolt*"
+                                     "node" nil "-i")))
     (pop-to-buffer-same-window name)))
 
 (defvar-keymap tenderbolt-mode-map
@@ -112,7 +125,7 @@ If a session already exists, pop to its buffer."
     ("b" "Interactive" tenderbolt-run-robot)
     ("g" "Prompt" tenderbolt-go-robot)]
    ["Backend"
-    ("s" "Django Shell" tenderbolt-run-shell)]
+    ("s" "Django Shell" tenderbolt-run-django-shell)]
    ["Frontend"
     ("r" "Run" tenderbolt-run-frontend)
     ("t" "Tests" tenderbolt-test-frontend)
