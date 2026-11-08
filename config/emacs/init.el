@@ -43,6 +43,7 @@
 
 ;; Disable lockfiles.
 (setopt create-lockfiles nil)
+(setopt remote-file-name-inhibit-cache t)
 (setopt remote-file-name-inhibit-locks t)
 (setopt remote-file-name-inhibit-auto-save-visited t)
 
@@ -89,7 +90,8 @@
 (defvar-keymap wh-map
   :doc "Keymap for my commands."
   "r" wh-notes-map
-  "d" #'wh-insert-date)
+  "b" #'scratch-buffer
+  "D" #'wh-insert-date)
 
 (require 'package)
 (unless package-archive-contents
@@ -140,16 +142,17 @@
 (use-package tramp
   :ensure nil
   :config
-  (connection-local-set-profile-variables
-   'remote-direct-async-process
-   '((tramp-direct-async-process . t)))
-  (connection-local-set-profiles
-   '(:application tramp :protocol "scp")
-   'remote-direct-async-process)
+  (unless (string-search tramp-file-name-regexp vc-ignore-dir-regexp)
+    (setq vc-ignore-dir-regexp
+          (format "\\(?:%s\\)\\|\\(?:%s\\)"
+                  vc-ignore-dir-regexp tramp-file-name-regexp)))
   :custom
+  (tramp-default-method "scp")
   (tramp-use-scp-direct-remote-copying t)
   (tramp-copy-size-limit (* 1024 1024)) ;; 1MB
-  (tramp-verbose 1))
+  (tramp-verbose 1)
+  (tramp-direct-async-process t)
+  (tramp-use-connection-share t))
 (use-package isearch
   :ensure nil
   :custom
@@ -206,6 +209,12 @@
   :after dired
   :ensure t
   :bind (:map dired-mode-map ("/" . dired-filter-map)))
+(use-package dired-rsync
+  :ensure t
+  :after dired
+  :bind (:map dired-mode-map ("C-c C-r" . dired-rsync))
+  :custom
+  (dired-rsync-command (if (eq system-type 'darwin) "/opt/homebrew/bin/rsync" "rsync")))
 (use-package hl-line
   :ensure nil
   :hook ((text-mode prog-mode tabulated-list-mode) . hl-line-mode))
@@ -375,7 +384,8 @@ The DWIM behaviour of this command is as follows:
                       ("Europe/Paris" "Paris")
                       ("Africa/Casablanca" "Rabat"))))
 (use-package async
-  :ensure t)
+  :ensure t
+  :config (dired-async-mode 1))
 (use-package which-func
   :ensure nil
   :custom
@@ -455,7 +465,7 @@ The DWIM behaviour of this command is as follows:
 (use-package magit
   :ensure t
   :after transient
-  :pin nongnu
+  :pin releases
   :bind
   (:map project-prefix-map
         ("m" . magit-project-status)
@@ -481,6 +491,7 @@ The DWIM behaviour of this command is as follows:
 (use-package forge
   :ensure t
   :after magit
+  :pin releases
   :custom
   (forge-owned-accounts '(("hwadii"))))
 (use-package git-modes
@@ -492,10 +503,8 @@ The DWIM behaviour of this command is as follows:
   :ensure nil
   :custom
   (doc-view-resolution 300))
-(use-package pdf-tools
-  :ensure t
-  :custom
-  (pdf-view-display-size 'fit-page))
+(use-package emureader
+  :ensure t)
 (use-package org
   :ensure t
   :pin gnu
@@ -640,16 +649,15 @@ The DWIM behaviour of this command is as follows:
   :ensure t
   :pin melpa
   :bind
-  (:map project-prefix-map
-        ("t" . ghostel-project)
-        ("T" . ghostel-project-list-buffers))
+  (:map project-prefix-map ("t" . ghostel-project))
   :config
   (setopt ghostel-keymap-exceptions
           (append ghostel-keymap-exceptions '("M-o" "C-S-<right>"
                                               "C-S-<left>" "C-S-<up>"
                                               "C-S-<down>" "M-s" "M-!" "M-&")))
   :custom
-  (ghostel-module-auto-install 'download))
+  (ghostel-module-auto-install 'download)
+  (ghostel-status-mode-line-labels 'words))
 (use-package ghostel-eshell
   :ensure nil
   :hook (eshell-load . ghostel-eshell-visual-command-mode)
@@ -665,6 +673,13 @@ The DWIM behaviour of this command is as follows:
   :ensure nil
   :hook
   (shell-mode . ghostel-comint-mode))
+(use-package consult-ghostel
+  :after (ghostel consult)
+  :ensure t
+  :bind (:map project-prefix-map
+              ("T" . consult-ghostel-project)
+              :map ghostel-semi-char-mode-map
+              ("C-c h" . consult-ghostel-history)))
 (use-package which-key
   :ensure nil
   :pin gnu
@@ -859,6 +874,8 @@ is reused."
   (embark-quit-after-action t))
 (use-package dictionary
   :ensure nil
+  :bind
+  (:map wh-map ("d" . dictionary-search))
   :custom
   (dictionary-server "dict.org"))
 (use-package server
@@ -1083,6 +1100,11 @@ is reused."
   :custom
   (Man-switches "-a")
   (Man-notify-method 'pushy))
+(use-package info
+  :ensure nil
+  :if (eq system-type 'darwin)
+  :custom
+  (Info-additional-directory-list '("/opt/homebrew/share/info")))
 (use-package stillness-mode
   :ensure t
   :init (stillness-mode))
@@ -1116,6 +1138,10 @@ is reused."
   :pin gnu)
 (use-package htmlize
   :ensure t)
+(use-package python
+  :ensure nil
+  :custom
+  (python-indent-guess-indent-offset-verbose nil))
 (use-package css-mode
   :ensure nil
   :custom
@@ -1156,6 +1182,7 @@ is reused."
       :variable-pitch-height 110)
      (macos
       :default-height 130
+      :fixed-pitch-height 130
       :variable-pitch-height 140))))
 (set-fontset-font t nil "Source Code Pro" nil 'append)
 (set-fontset-font t nil "Font Awesome 7 Free" nil 'append)
@@ -1284,6 +1311,7 @@ is reused."
 
 (load custom-file t)
 (require 'wh-eshell)
+(require 'wh-gptel)
 
 (provide 'init)
 

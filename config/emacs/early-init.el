@@ -50,6 +50,7 @@
 ;; Enable installation of packages from MELPA.
 (setq package-enable-at-startup nil)
 (setq package-archives '(("melpa"        . "https://snapshots.melpa.org/packages/")
+                         ("releases"     . "https://releases.melpa.org/packages/")
                          ("gnu"          . "https://elpa.gnu.org/packages/")
                          ("nongnu"       . "https://elpa.nongnu.org/nongnu/")))
 (setq package-archive-priorities '(("gnu"    . 99)
@@ -58,6 +59,6 @@
 (package-initialize)
 
 (setq ns-use-thin-smoothing t
-      ns-click-through nil)
+      ns-click-through t)
 
 ;;; early-init.el ends here.

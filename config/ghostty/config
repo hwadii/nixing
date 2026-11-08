@@ -1,5 +1,5 @@
-font-family = "Envy Code R"
-font-size = 14
+font-family = "DejaVu Sans Mono"
+font-size = 13
 macos-option-as-alt = true
 shell-integration-features = ssh-env,ssh-terminfo
 keybind = ctrl+m=text:\r
