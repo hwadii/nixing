@@ -1,6 +1,9 @@
+{ pkgs-unstable, ... }:
+
 {
   services.immich = {
     enable = true;
+    package = pkgs-unstable.immich;
     port = 2283;
     host = "0.0.0.0";
     openFirewall = true;
