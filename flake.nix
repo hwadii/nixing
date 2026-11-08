@@ -54,7 +54,7 @@
 
       nixosConfigurations.balerion = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs pkgs-unstable; };
         modules = [
           disko.nixosModules.disko
           ./hosts/balerion/configuration.nix
