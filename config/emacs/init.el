@@ -1147,11 +1147,11 @@ is reused."
   :custom
   (fontaine-presets
    '((t
-      :default-family "PragmataPro Mono"
-      :default-height 110
+      :default-family "DejaVu Sans Mono"
+      :default-height 100
       :default-weight regular
       :default-width normal
-      :fixed-pitch-family "PragmataPro Mono"
+      :fixed-pitch-family "DejaVu Sans Mono"
       :fixed-pitch-weight regular
       :variable-pitch-family "Work Sans"
       :variable-pitch-weight regular
