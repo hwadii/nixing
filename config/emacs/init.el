@@ -504,6 +504,7 @@ The DWIM behaviour of this command is as follows:
   :custom
   (doc-view-resolution 300))
 (use-package emureader
+  :if (eq system-type 'darwin)
   :ensure t)
 (use-package org
   :ensure t
