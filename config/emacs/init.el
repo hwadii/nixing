@@ -1078,7 +1078,8 @@ is reused."
   :ensure t)
 (use-package substitute
   :ensure t
-  :bind (:map wh-map ("s" . substitute-prefix-map))
+  :config
+  :bind-keymap ("C-c w s" . substitute-prefix-map)
   :hook (substitute-post-replace-functions . substitute-report-operation))
 (use-package doom-modeline
   :ensure t
