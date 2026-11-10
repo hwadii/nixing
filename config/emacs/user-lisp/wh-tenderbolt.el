@@ -56,7 +56,7 @@ If ARG is passed, create a new buffer."
     (if (and existing (not arg))
         (pop-to-buffer-same-window existing)
       (let ((buf (generate-new-buffer name)))
-        (ghostel-exec buf "claude")
+        (ghostel-exec buf "mise" '("x" "--" "claude"))
         (pop-to-buffer-same-window buf)))))
 
 (defvar tenderbolt-go-robot-history nil
