@@ -217,7 +217,7 @@
   (dired-rsync-command (if (eq system-type 'darwin) "/opt/homebrew/bin/rsync" "rsync")))
 (use-package hl-line
   :ensure nil
-  :hook ((text-mode prog-mode tabulated-list-mode) . hl-line-mode))
+  :hook ((fundamental-mode text-mode prog-mode tabulated-list-mode) . hl-line-mode))
 (use-package hl-todo
   :ensure t)
 (use-package dired-aux
@@ -1082,7 +1082,7 @@ is reused."
 (use-package substitute
   :ensure t
   :config
-  :bind-keymap ("C-c w s" . substitute-prefix-map)
+  :bind (:map wh-map ("s" . substitute-prefix-map))
   :hook (substitute-post-replace-functions . substitute-report-operation))
 (use-package doom-modeline
   :ensure t
