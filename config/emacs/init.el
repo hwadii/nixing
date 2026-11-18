@@ -810,6 +810,9 @@ is reused."
 (use-package ef-themes
   :after modus-themes
   :ensure t)
+(use-package au-themes
+  :after modus-themes
+  :vc (:url "https://github.com/szymonwilczek/au-themes" :rev :newest))
 (use-package envrc
   :ensure t
   :hook (after-init . envrc-global-mode)
